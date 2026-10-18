@@ -167,6 +167,9 @@ if (pagesBase) {
   const marker = 'Inherit(_this,Router,null,"")';
   assert.equal(app.split(marker).length - 1, 1, '路由根路径不唯一');
   app = replace(app, marker, `Inherit(_this,Router,null,${JSON.stringify(pagesBase)})`, '静态站点子路径');
+  // 纹理路径已经由 absolutePath 按 HYDRA_BASE_PATH 拼接。再给 Assets.CDN 加前缀会变成 stage//…/stage/assets。
+  app = replace(app, '_this.video.src=((window.HYDRA_ASSETS_CDN||"")+thumbnailURL)', '_this.video.src=((window.PX_STAGE_BASE||"")+thumbnailURL)', '原图使用页面基路径');
+  app = replace(app, '(location.hostname+port+pathname+"/"+path).replace("//","/")', '(location.hostname+port+pathname+"/"+path).replace(/\\/{2,}/g,"/")', '合并重复斜杠');
 }
 await write('assets/js/app.1780406240914.js', app);
 
@@ -178,7 +181,7 @@ html = html.replaceAll('Active Theory · Creative Digital Experiences', `${brand
   .replace(/\s*<script>\s*window\.dataLayer[\s\S]*?<\/script>/, '');
 const bootBridge = await buildBoot(root, write);
 const assetPrefix = pagesBase
-  ? `<base href="${pagesBase}"><script>window.HYDRA_ASSETS_CDN=${JSON.stringify(pagesBase)};(function(){var base=${JSON.stringify(pagesBase.slice(0, -1))};try{var saved=sessionStorage.getItem("px-stage-path");if(saved){sessionStorage.removeItem("px-stage-path");if(saved.indexOf(base+"/")===0)history.replaceState(null,"",saved);}}catch(e){}var orig=window.fetch;window.fetch=function(input,init){if(typeof input==="string"&&input.charAt(0)==="/"&&input.charAt(1)!=="/"&&input.indexOf(base+"/")!==0)input=base+input;return orig.call(this,input,init);};})();</script>`
+  ? `<base href="${pagesBase}"><script>window.PX_STAGE_BASE=${JSON.stringify(pagesBase)};window.HYDRA_BASE_PATH=${JSON.stringify(pagesBase.slice(0, -1))};(function(){var base=${JSON.stringify(pagesBase.slice(0, -1))};try{var saved=sessionStorage.getItem("px-stage-path");if(saved){sessionStorage.removeItem("px-stage-path");if(saved.indexOf(base+"/")===0)history.replaceState(null,"",saved);}}catch(e){}var orig=window.fetch;window.fetch=function(input,init){if(typeof input==="string"&&input.charAt(0)==="/"&&input.charAt(1)!=="/"&&input.indexOf(base+"/")!==0)input=base+input;return orig.call(this,input,init);};})();</script>`
   : '<base href="/">';
 html = html.replace('<base href="/">', '');
 html = html.replace('<head>', '<head>' + assetPrefix + bootBridge);

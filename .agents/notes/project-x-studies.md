@@ -8,4 +8,4 @@ Status: implemented
 - 展板是纸锋纸色、墨线和硬偏移。有宣传站截图的直接镶进框里；没有截图的只排字，不补画系统界面。
 - 三维标志仍用莱茵生命轮廓。换轮廓会改首页、About、TreeScene 和 CleanRoom 的外形。
 - 欢迎页里的 RHINE LAB 是已经量过的字形动画，不改词。
-- 静态 Pages 需要 `PAGES_BASE`。搜索和 `/ws` 仍依赖 Node 服务。
+- 静态 Pages 需要 `PAGES_BASE`。资源前缀只用 `HYDRA_BASE_PATH`，不再设置 `HYDRA_ASSETS_CDN`，避免和 `absolutePath` 叠成两段路径。搜索和 `/ws` 仍依赖 Node 服务。
