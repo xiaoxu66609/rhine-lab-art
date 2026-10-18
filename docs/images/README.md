@@ -4,13 +4,13 @@
 
 以下画面来自这个分支的实际浏览器。它们是实时网页的帧，不是展板原图，也不代表无损截图。检查记录留在 Git 忽略的 `.artifacts/`。
 
-| 展示文件 | 成片时点 | 场景 |
-| --- | --- | --- |
-| rhine-boot.png | 20 秒 | RhineLabUI 深色欢迎页 |
-| rhine-archive.png | 45 秒 | CG 卡片与原始粒子场景 |
-| rhine-belonging.png | 96 秒 | 第十三张展品 Belonging 与鼠标扰动 |
+| 展示文件 | 场景 |
+| --- | --- |
+| stage-home.png | 首页。导航是 Studies / About，中间仍是原来的三维标志和粒子。 |
+| stage-paper.png | 第一段 Paper 的全屏展板，纸锋纸底和宣传站首页截图。 |
+| stage-contact.png | 联系层。入口是仓库、正在运行的系统和宣传站。 |
 
-画面包含第三方 CG、标志和渲染素材，来源与许可见根目录 `THIRD_PARTY_NOTICES.md`；截图不会改变其权利归属。
+这些帧来自 `npm test` 的桌面浏览器。画面里的运行时、标志和光学材质来源见根目录 `THIRD_PARTY_NOTICES.md`。
 
 ## 更新方式
 

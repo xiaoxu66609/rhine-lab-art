@@ -10,9 +10,9 @@
 
 以下画面来自当前网站的实际录制，保留原来的实时 WebGL 渲染。采集与素材说明见 [截图来源](docs/images/README.md)。
 
-![深色莱茵生命登录欢迎页](docs/images/rhine-boot.png)
-![围绕脊柱排列的 CG 展品卡片](docs/images/rhine-archive.png)
-![第十三张展品 Belonging 的鼠标粒子扰动](docs/images/rhine-belonging.png)
+![首页仍是原来的三维标志和粒子](docs/images/stage-home.png)
+![纸锋展板 Paper 的全屏原图](docs/images/stage-paper.png)
+![联系页改为 Project-X 的入口](docs/images/stage-contact.png)
 
 ## 运行
 
@@ -28,7 +28,7 @@ npm run dev
 
 ## 展示与部署
 
-完整服务需要 Node，用来处理深链接、站内搜索和 WebSocket。GitHub Pages 使用 `PAGES_BASE=/rhine-lab-art/ npm run build`，把 `public/` 当作静态站点；页面可以打开，搜索和房间同步没有后端。
+完整服务需要 Node，用来处理深链接、站内搜索和 WebSocket。静态页发布在宣传站目录下：<https://xiaoxu66609.github.io/Project-X-promo-site/stage/>。构建时使用 `PAGES_BASE=/Project-X-promo-site/stage/`。静态页可以打开首页和由 404 找回的深链接；搜索和房间同步没有后端。
 
 - Ubuntu / Nginx / systemd 示例见 [部署说明](docs/DEPLOYMENT.md) 和 `deploy/`。
 - [render.yaml](render.yaml) 是可选的 Render 部署模板；创建服务前自行核对平台当前套餐、配额与区域可达性。

@@ -1,8 +1,6 @@
+# 这个仓库的令牌不能创建 Pages 站点。静态页改由宣传站的 stage/ 目录发布。
 name: GitHub Pages
 on:
-  push:
-    branches:
-      - cursor/project-x-paper-stage-5b7a
   workflow_dispatch:
 permissions:
   contents: read

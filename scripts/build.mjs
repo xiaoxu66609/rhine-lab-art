@@ -73,7 +73,7 @@ await adaptModule('WorkDetailContent', input => {
   let out = replace(input, '_this.video=document.createElement("video")', '_this.video=document.createElement("img"),_this.video.play=_=>{},_this.video.pause=_=>{},_this.video.alt="Project X study",_this.video.style.maxHeight="100%",_this.video.style.objectFit="contain"', '详情全屏原图');
   out = replace(out, '"Close Video"', '"Close Image"', '全屏关闭标签');
   out = replace(out, '"Open fullscreen video"', '"Open fullscreen image"', '全屏打开标签');
-  out = replace(out, 'color:color})=>{_this.layers.title.setText(title)', 'color:color,thumbnailURL:thumbnailURL})=>{_this.video.src=thumbnailURL;_this.video.alt=title;_this.layers.title.setText(title)', '详情绑定当前原图');
+  out = replace(out, 'color:color})=>{_this.layers.title.setText(title)', 'color:color,thumbnailURL:thumbnailURL})=>{_this.video.src=((window.HYDRA_ASSETS_CDN||"")+thumbnailURL).replace(/([^:])\\/{2,}/g,"$1/");_this.video.alt=title;_this.layers.title.setText(title)', '详情绑定当前原图');
   out = replace(out, 'let camera=await _this.get("WorkDetail/camera");', '_this.imageButton=document.createElement("button");_this.imageButton.textContent="VIEW ORIGINAL ↗";_this.imageButton.setAttribute("aria-label","Open original image");_this.imageButton.style.cssText="position:fixed;right:24px;bottom:28px;z-index:1000;background:#0b1214cc;border:1px solid #ffffff55;color:#eee;padding:12px 16px;font:11px nbarchitekt,monospace;letter-spacing:.06em;cursor:pointer";_this.imageButton.hidden=true;_this.imageButton.onclick=_this.onFullscreenClick;document.body.appendChild(_this.imageButton);_this.bind("Router/state",(route=>{_this.imageButton.hidden=!route.includes("work/")}));let camera=await _this.get("WorkDetail/camera");', '以可访问的原图按钮替代隐藏调试网格');
   return replace(out, '"Project Link"', '"Project source"', '素材来源链接');
 });
@@ -178,7 +178,7 @@ html = html.replaceAll('Active Theory · Creative Digital Experiences', `${brand
   .replace(/\s*<script>\s*window\.dataLayer[\s\S]*?<\/script>/, '');
 const bootBridge = await buildBoot(root, write);
 const assetPrefix = pagesBase
-  ? `<base href="${pagesBase}"><script>window.HYDRA_ASSETS_CDN=${JSON.stringify(pagesBase)};(function(){var base=${JSON.stringify(pagesBase.slice(0, -1))};var orig=window.fetch;window.fetch=function(input,init){if(typeof input==="string"&&input.charAt(0)==="/"&&input.charAt(1)!=="/"&&input.indexOf(base+"/")!==0)input=base+input;return orig.call(this,input,init);};})();</script>`
+  ? `<base href="${pagesBase}"><script>window.HYDRA_ASSETS_CDN=${JSON.stringify(pagesBase)};(function(){var base=${JSON.stringify(pagesBase.slice(0, -1))};try{var saved=sessionStorage.getItem("px-stage-path");if(saved){sessionStorage.removeItem("px-stage-path");if(saved.indexOf(base+"/")===0)history.replaceState(null,"",saved);}}catch(e){}var orig=window.fetch;window.fetch=function(input,init){if(typeof input==="string"&&input.charAt(0)==="/"&&input.charAt(1)!=="/"&&input.indexOf(base+"/")!==0)input=base+input;return orig.call(this,input,init);};})();</script>`
   : '<base href="/">';
 html = html.replace('<base href="/">', '');
 html = html.replace('<head>', '<head>' + assetPrefix + bootBridge);
