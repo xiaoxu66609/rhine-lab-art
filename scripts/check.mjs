@@ -14,6 +14,11 @@ const report = JSON.parse(await fs.readFile(path.join(root, '.artifacts/adaptati
 const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 const app = await fs.readFile(path.join(publicDir, 'assets/js/app.1780406240914.js'), 'utf8');
 assert.equal(sha(app), report.runtimeSHA256);
+assert.match(app, /function detectIpad\(\)\{return _this\.detect\("mac"\)&&navigator\.maxTouchPoints>1\}/);
+assert.match(app, /drag:!!\(Device\.mobile\|\|navigator\.maxTouchPoints>1\)/);
+assert.match(app, /Device\.mobile&&Device\.mobile\.tablet\?Math\.min\(2,Device\.pixelRatio\|\|1\)/);
+assert.match(app, /if\(blocked&&gl&&gl\.webgl2&&"ios"===Device\.system\.os&&!software\)blocked=!1;return blocked/);
+assert.match(app, /video \* 0\.7/);
 const files = await fs.readdir(path.join(source, 'modules'));
 for (const module of report.preservedModules) {
   const original = (await fs.readFile(path.join(source, 'modules', files.find(file => file.endsWith(`-${module.name}.js`))), 'utf8')).trim();

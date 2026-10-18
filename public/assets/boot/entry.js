@@ -17,15 +17,25 @@ const sequence = new BootSequence(stage);
 const status = overlay.querySelector('[role="status"]');
 const button = overlay.querySelector('button');
 function resize() {
-  const portrait = innerWidth / innerHeight < .8;
+  const view = window.visualViewport;
+  const viewW = view?.width || innerWidth;
+  const viewH = view?.height || innerHeight;
+  const portrait = viewW / viewH < .8;
   const width = portrait ? 900 : 1920;
-  const scale = portrait ? innerWidth / 900 : Math.min(innerWidth / 1920, innerHeight / 1080);
+  const scale = portrait ? viewW / 900 : Math.min(viewW / 1920, viewH / 1080);
   stage.classList.toggle('portrait', portrait);
   stage.style.width = width + 'px';
-  stage.style.height = (portrait ? innerHeight / scale : 1080) + 'px';
+  stage.style.height = (portrait ? viewH / scale : 1080) + 'px';
   stage.style.transform = `translate(-50%,-50%) scale(${scale})`;
+  overlay.style.top = (view?.offsetTop || 0) + 'px';
+  overlay.style.left = (view?.offsetLeft || 0) + 'px';
+  overlay.style.width = viewW + 'px';
+  overlay.style.height = viewH + 'px';
 }
-resize(); addEventListener('resize', resize);
+resize();
+addEventListener('resize', resize);
+visualViewport?.addEventListener('resize', resize);
+visualViewport?.addEventListener('scroll', resize);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const begin = performance.now();
 let skip = reduced, settled = 0, released = false;
@@ -44,6 +54,8 @@ function tick(now) {
       released = true;
       engine.release();
       removeEventListener('resize', resize);
+      visualViewport?.removeEventListener('resize', resize);
+      visualViewport?.removeEventListener('scroll', resize);
       return;
     }
   }

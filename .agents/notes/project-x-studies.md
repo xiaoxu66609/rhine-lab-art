@@ -9,3 +9,5 @@ Status: implemented
 - 三维标志仍用莱茵生命轮廓。换轮廓会改首页、About、TreeScene 和 CleanRoom 的外形。
 - 欢迎页里的 RHINE LAB 是已经量过的字形动画，不改词。
 - 静态 Pages 需要 `PAGES_BASE`。资源前缀只用 `HYDRA_BASE_PATH`，不再设置 `HYDRA_ASSETS_CDN`，避免和 `absolutePath` 叠成两段路径。搜索和 `/ws` 仍依赖 Node 服务。
+- iPad 识别不再用 4:3 长宽比。Macintosh 且 `maxTouchPoints > 1` 视为 iOS 平板，拖拽滚动因此打开。原屏蔽名单（含 SwiftShader）仍会跳转 unsupported。有真实 WebGL2 的 iOS，即使基准测试把 GPU 写成 legacy，也不跳转。
+- 平板的 `Tests.getDPR` 和主画布像素比提到 `min(devicePixelRatio, 2)`。手机和桌面的原分档不动。展板着色器只在解析 `WorkItemShader` / `WorkItemUIShader` 时减轻取样，`compiled.vs` 字节不变，标志着色器不改。

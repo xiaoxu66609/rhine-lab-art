@@ -73,8 +73,9 @@ await adaptModule('WorkDetailContent', input => {
   let out = replace(input, '_this.video=document.createElement("video")', '_this.video=document.createElement("img"),_this.video.play=_=>{},_this.video.pause=_=>{},_this.video.alt="Project X study",_this.video.style.maxHeight="100%",_this.video.style.objectFit="contain"', '详情全屏原图');
   out = replace(out, '"Close Video"', '"Close Image"', '全屏关闭标签');
   out = replace(out, '"Open fullscreen video"', '"Open fullscreen image"', '全屏打开标签');
+  out = replace(out, 'top: 22px;\\n        right: 22px;\\n        z-index: 3;\\n\\n        width: 18px;\\n        height: 18px;\\n\\n        border: none;\\n        background: transparent url(${Assets.getPath("assets/images/ui/close.svg")});\\n        background-size: cover;', 'top: max(12px, env(safe-area-inset-top));\\n        right: max(12px, env(safe-area-inset-right));\\n        z-index: 3;\\n\\n        width: 44px;\\n        height: 44px;\\n\\n        border: none;\\n        background: transparent url(${Assets.getPath("assets/images/ui/close.svg")});\\n        background-size: 18px 18px;', '全屏关闭按钮达到触控尺寸');
   out = replace(out, 'color:color})=>{_this.layers.title.setText(title)', 'color:color,thumbnailURL:thumbnailURL})=>{_this.video.src=((window.HYDRA_ASSETS_CDN||"")+thumbnailURL).replace(/([^:])\\/{2,}/g,"$1/");_this.video.alt=title;_this.layers.title.setText(title)', '详情绑定当前原图');
-  out = replace(out, 'let camera=await _this.get("WorkDetail/camera");', '_this.imageButton=document.createElement("button");_this.imageButton.textContent="VIEW ORIGINAL ↗";_this.imageButton.setAttribute("aria-label","Open original image");_this.imageButton.style.cssText="position:fixed;right:24px;bottom:28px;z-index:1000;background:#0b1214cc;border:1px solid #ffffff55;color:#eee;padding:12px 16px;font:11px nbarchitekt,monospace;letter-spacing:.06em;cursor:pointer";_this.imageButton.hidden=true;_this.imageButton.onclick=_this.onFullscreenClick;document.body.appendChild(_this.imageButton);_this.bind("Router/state",(route=>{_this.imageButton.hidden=!route.includes("work/")}));let camera=await _this.get("WorkDetail/camera");', '以可访问的原图按钮替代隐藏调试网格');
+  out = replace(out, 'let camera=await _this.get("WorkDetail/camera");', '_this.imageButton=document.createElement("button");_this.imageButton.textContent="VIEW ORIGINAL ↗";_this.imageButton.setAttribute("aria-label","Open original image");_this.imageButton.style.cssText="position:fixed;right:max(16px, env(safe-area-inset-right));bottom:max(20px, env(safe-area-inset-bottom));z-index:1000;background:#0b1214cc;border:1px solid #ffffff55;color:#eee;padding:12px 16px;min-height:44px;font:11px nbarchitekt,monospace;letter-spacing:.06em;cursor:pointer;touch-action:manipulation";_this.imageButton.hidden=true;_this.imageButton.onclick=_this.onFullscreenClick;document.body.appendChild(_this.imageButton);_this.bind("Router/state",(route=>{_this.imageButton.hidden=!route.includes("work/")}));let camera=await _this.get("WorkDetail/camera");', '以可访问的原图按钮替代隐藏调试网格');
   return replace(out, '"Project Link"', '"Project source"', '素材来源链接');
 });
 // Gate the original ready signal on the login's welcome frame. The loader still
@@ -171,6 +172,38 @@ if (pagesBase) {
   app = replace(app, '_this.video.src=((window.HYDRA_ASSETS_CDN||"")+thumbnailURL)', '_this.video.src=((window.PX_STAGE_BASE||"")+thumbnailURL)', '原图使用页面基路径');
   app = replace(app, '(location.hostname+port+pathname+"/"+path).replace("//","/")', '(location.hostname+port+pathname+"/"+path).replace(/\\/{2,}/g,"/")', '合并重复斜杠');
 }
+
+// iPadOS 13+ 的 Safari 自称 Macintosh。原先只把接近 4:3 的屏幕当成 iPad，iPad mini 会被当成桌面：
+// 触摸被 preventDefault，滚动拖拽关闭，悬停界面打不开。多点触控的 Mac 标识即平板。
+app = replace(app, 'function detectIpad(){let aspect=Math.max(screen.width,screen.height)/Math.min(screen.width,screen.height);return _this.detect("mac")&&_this.touchCapable&&Math.abs(aspect-4/3)<Math.abs(aspect-1.6)}', 'function detectIpad(){return _this.detect("mac")&&navigator.maxTouchPoints>1}', 'iPad 不再按长宽比误判为桌面');
+app = replace(app, '_scroll=new Scroll({limit:!1,drag:Device.mobile})', '_scroll=new Scroll({limit:!1,drag:!!(Device.mobile||navigator.maxTouchPoints>1)})', '多点触控可以拖动舞台');
+app = replace(app, 'function getDPR(){return window.AURA?Device.pixelRatio:', 'function getDPR(){if(Device.mobile&&Device.mobile.tablet)return Math.min(2,Device.pixelRatio||1);return window.AURA?Device.pixelRatio:', '平板画布使用设备像素');
+app = replace(app, '_this.getDPR=_=>GPU.OVERSIZED', '_this.getDPR=_=>Device.mobile&&Device.mobile.tablet?Math.min(2,Device.pixelRatio||1):GPU.OVERSIZED', '平板离屏缓冲使用设备像素');
+app = replace(app, '}else Stage.width=window.innerWidth||document.body.clientWidth||document.documentElement.offsetWidth,Stage.height=Stage.isNormalMobileScroll&&Stage.div.offsetHeight||window.innerHeight||document.body.clientHeight||document.documentElement.offsetHeight}', '}else{let vv=window.visualViewport&&"ios"===Device.system.os?window.visualViewport:null;Stage.width=vv?vv.width:window.innerWidth||document.body.clientWidth||document.documentElement.offsetWidth,Stage.height=vv?vv.height:Stage.isNormalMobileScroll&&Stage.div.offsetHeight||window.innerHeight||document.body.clientHeight||document.documentElement.offsetHeight}}', 'iPad 使用可视视口高度');
+app = replace(app, 'html.scrollTop=-1),Events.emitter._fireEvent(Events.RESIZE)}),delay)})),window.onorientationchange=window.onresize', 'html.scrollTop=-1),Events.emitter._fireEvent(Events.RESIZE)}),delay)})),window.visualViewport&&window.visualViewport.addEventListener("resize",(()=>{clearTimeout(timer),timer=setTimeout(updateStage,delay)})),window.onorientationchange=window.onresize', '工具栏变化时重测舞台');
+app = replace(app, '{width:60,height:30,bg:"#ff0000",_type:"glObject",refName:"hit",children:[]},{font:"NBArchitektStd-Regular",fontSize:12', '{width:96,height:48,bg:"#ff0000",_type:"glObject",refName:"hit",children:[]},{font:"NBArchitektStd-Regular",fontSize:12', '导航热区适合手指');
+app = replace(app, '_this.hit.alpha=0,_this.hit.y=-10,_this.hit.x=-10', '_this.hit.alpha=0,_this.hit.y=-18,_this.hit.x=-18', '导航热区盖住文字');
+// 基准测试把偏慢的 iPad 标成 legacy 后会进屏蔽名单。有真实 WebGL2、且不是软件渲染的 iOS 不跳转 unsupported。
+app = replace(app, 'match:function(){return!Device.graphics.gpu||Device.graphics.gpu.detect([', 'match:function(){const gl=Device.graphics.webgl,label=((gl&&gl.renderer)||"")+" "+((gl&&gl.gpu)||""),software=/swiftshader|llvmpipe|softpipe|basic render|generic renderer/i.test(label);let blocked=!Device.graphics.gpu||Device.graphics.gpu.detect([', '记录 GPU 屏蔽结果');
+app = replace(app, '"sgx543","legacy","sgx 543"])}}})', '"sgx543","legacy","sgx 543"]);if(blocked&&gl&&gl.webgl2&&"ios"===Device.system.os&&!software)blocked=!1;return blocked}}})', '真实 WebGL2 的 iPad 不进 unsupported');
+const cardNeedles = [
+  ['WorkItemShader.glsl', 'videoUV = mix(videoUV, scaleUV(gl_FragCoord.xy / resolution, vec2(0.6)), 0.3);'],
+  ['WorkItemShader.glsl', 'videoUV - normal.xy * 0.05 * (1.0-uVideoBlend)'],
+  ['WorkItemShader.glsl', '0.005 * edges'],
+  ['WorkItemShader.glsl', 'pow(min(vec3(0.5), video), vec3(1.0)) * 0.45'],
+  ['WorkItemShader.glsl', 'sin(time * 2.0 + vUv.x * 5.0) * 0.15'],
+  ['WorkItemShader.glsl', 'radialBlur(tRefraction, ruv, 5.0, 5.0)'],
+  ['WorkItemShader.glsl', 'ruv -= 0.05 * vNormal.xy'],
+  ['WorkItemShader.glsl', 'uHover * 0.03 + 0.02 + sin(time * 2.0 + vUv.x * 5.0) * 0.005'],
+  ['WorkItemUIShader.glsl', 'uv.x += fract(uv.x * 15.0) * edges;'],
+  ['WorkItemUIShader.glsl', 'getRGB(tMap, uv, radians(180.0), 0.001 - edges * 0.15)']
+];
+const shaderSource = await fs.readFile(path.join(frozen, 'compiled.vs'), 'utf8');
+for (const [file, needle] of cardNeedles) {
+  const chunk = shaderSource.split(`}{@}${file}{@}`)[1]?.split('}{@}')[0] || '';
+  assert.ok(chunk.includes(needle), `展板着色器片段缺失：${needle}`);
+}
+app = replace(app, 'function parseCompiled(shaders){var split=shaders.split("{@}");split.shift();for(var i=0;i<split.length;i+=2){var name=split[i],text=split[i+1];text.includes("#!UNIFORMS")?parseSingleShader(text,name):_this[name]=text}}', 'function parseCompiled(shaders){var split=shaders.split("{@}");split.shift();for(var i=0;i<split.length;i+=2){var name=split[i],text=split[i+1];if(name==="WorkItemShader.glsl"||name==="WorkItemUIShader.glsl")text=function mild(name,text){const swap=(a,b)=>{text.includes(a)&&(text=text.split(a).join(b))};if(name==="WorkItemShader.glsl"){swap("videoUV = mix(videoUV, scaleUV(gl_FragCoord.xy / resolution, vec2(0.6)), 0.3);","videoUV = mix(videoUV, scaleUV(gl_FragCoord.xy / resolution, vec2(0.6)), 0.0);");swap("videoUV - normal.xy * 0.05 * (1.0-uVideoBlend)","videoUV - normal.xy * 0.012 * (1.0-uVideoBlend)");swap("0.005 * edges","0.0");swap("pow(min(vec3(0.5), video), vec3(1.0)) * 0.45","video * 0.7");swap("sin(time * 2.0 + vUv.x * 5.0) * 0.15","sin(time * 2.0 + vUv.x * 5.0) * 0.04");swap("radialBlur(tRefraction, ruv, 5.0, 5.0)","radialBlur(tRefraction, ruv, 2.0, 1.25)");swap("ruv -= 0.05 * vNormal.xy","ruv -= 0.02 * vNormal.xy");swap("uHover * 0.03 + 0.02 + sin(time * 2.0 + vUv.x * 5.0) * 0.005","uHover * 0.015 + 0.006 + sin(time * 2.0 + vUv.x * 5.0) * 0.002")}else{swap("uv.x += fract(uv.x * 15.0) * edges;","uv.x += fract(uv.x * 15.0) * edges * 0.15;");swap("getRGB(tMap, uv, radians(180.0), 0.001 - edges * 0.15)","getRGB(tMap, uv, 0.0, 0.0)")}return text}(name,text);text.includes("#!UNIFORMS")?parseSingleShader(text,name):_this[name]=text}}', '展板正面减轻涂抹，标志玻璃保持原着色器');
 await write('assets/js/app.1780406240914.js', app);
 
 let html = await fs.readFile(path.join(reference, 'index.html'), 'utf8');
@@ -184,7 +217,7 @@ const assetPrefix = pagesBase
   ? `<base href="${pagesBase}"><script>window.PX_STAGE_BASE=${JSON.stringify(pagesBase)};window.HYDRA_BASE_PATH=${JSON.stringify(pagesBase.slice(0, -1))};(function(){var base=${JSON.stringify(pagesBase.slice(0, -1))};try{var saved=sessionStorage.getItem("px-stage-path");if(saved){sessionStorage.removeItem("px-stage-path");if(saved.indexOf(base+"/")===0)history.replaceState(null,"",saved);}}catch(e){}var orig=window.fetch;window.fetch=function(input,init){if(typeof input==="string"&&input.charAt(0)==="/"&&input.charAt(1)!=="/"&&input.indexOf(base+"/")!==0)input=base+input;return orig.call(this,input,init);};})();</script>`
   : '<base href="/">';
 html = html.replace('<base href="/">', '');
-html = html.replace('<head>', '<head>' + assetPrefix + bootBridge);
+html = html.replace('<head>', '<head>' + assetPrefix + bootBridge + '<meta name="px-stage" content="tablet-touch-2">');
 await write('index.html', html);
 if (pagesBase) {
   await write('404.html', html);
@@ -195,7 +228,7 @@ const uil = JSON.parse(await fs.readFile(path.join(frozen, 'uil.1780406240914.js
 const changedUIL = [];
 function set(key, value) { assert.ok(key in uil, key); changedUIL.push({ key, before: uil[key], after: value }); uil[key] = value; }
 set('INPUT_Element_3_About_text3d_text', 'Project\nX');
-set('INPUT_Element_4_About_text3d_text', 'From the desk to the record.\n\nPaper / Scan / Scores\n\nFourteen studies of Project-X, in the paper edge of the school system.');
+set('INPUT_Element_4_About_text3d_text', 'From the desk to the record.\n\nPaper / Scan / Scores\n\nFourteen studies of Project-X, in the paper-edge skin.');
 set('INPUT_Element_5_WorkDetailContent_text3d_text', 'PAPER');
 set('INPUT_Element_8_WorkDetailContent_text3d_text', '01 / 14\nPROJECT X\nSTUDIES');
 set('MESH_Element_22_CleanRoomscale', [.66, .33, 1]);
