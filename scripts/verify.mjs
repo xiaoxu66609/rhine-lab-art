@@ -72,7 +72,7 @@ async function inspect(mobile) {
     await page.waitForTimeout(600);
     const after = await page.evaluate(() => AppState.get('ViewController/scroll').views[0].layers.particles.layers.logo.rotation.y);
     assert.ok(Math.abs(after - before) > .01); item.interactions.dragRotatesLogo = true;
-    await page.locator('a[aria-label="Archive"]').focus(); await page.keyboard.press('Enter');
+    await page.locator('a[aria-label="Studies"]').focus(); await page.keyboard.press('Enter');
     await page.waitForFunction(() => AppState.get('Router/state') === 'work'); item.interactions.workNavigation = true;
     // 包含切场中间状态，检查斜切玻璃同时显示两个场景。
     for (const [label, scene, fraction] of [['home-mid', 'Home', .65], ['home-about-transition', 'Home', .97], ['about', 'About', .5], ['work', 'Work', .35], ['tree', 'TreeScene', .5], ['lab', 'CleanRoom', .5], ['footer', 'Footer', .62]]) {
@@ -105,19 +105,19 @@ async function inspect(mobile) {
     if (!original) {
       // 手机的聊天入口仅在 Work 中段显示；先进入真实可操作状态。
       await page.evaluate(() => { const s = AppState.get('ViewController/scroll'), w = s.views[2]; s.scrollTo(w.start + (w.end - w.start) * .35, 0); });
-      await page.locator('.ChatDOM a[title="-> the sky"]').waitFor({ state: 'visible' });
+      await page.locator('.ChatDOM a[title="-> scores"]').waitFor({ state: 'visible' });
       await page.waitForFunction(() => AppState.get('ViewController/uniforms')?.uChatOpen?.value > .99);
-      await page.locator('.ChatDOM a[title="-> the sky"]').click();
+      await page.locator('.ChatDOM a[title="-> scores"]').click();
       await page.waitForFunction(() => {
         const projects = CMSData.workPages.toJSON();
-        return projects.length > 0 && projects.every(project => project.tags.includes('sky'));
+        return projects.length > 0 && projects.every(project => project.tags.includes('scores'));
       });
       const tags = await page.evaluate(() => CMSData.workPages.toJSON().map(p => p.tags));
-      assert.ok(tags.length && tags.every(tag => tag.includes('sky'))); item.interactions.filter = { tag: 'sky', count: tags.length };
-      const input = page.locator('.ChatDOM textarea').first(); await input.fill('Daybreak'); await input.press('Enter');
-      await page.waitForFunction(() => AppState.get('Work/project')?.perma === 'daybreak', null, { timeout: 15000 });
+      assert.ok(tags.length && tags.every(tag => tag.includes('scores'))); item.interactions.filter = { tag: 'scores', count: tags.length };
+      const input = page.locator('.ChatDOM textarea').first(); await input.fill('Calendar'); await input.press('Enter');
+      await page.waitForFunction(() => AppState.get('Work/project')?.perma === 'calendar', null, { timeout: 15000 });
       await page.waitForFunction(() => !AppState.get('InteractAIAssistant/isThinking')); await page.waitForTimeout(3000);
-      await shot('search-detail'); item.interactions.search = 'daybreak';
+      await shot('search-detail'); item.interactions.search = 'calendar';
       assert.equal(await page.locator('video').count(), 0); assert.equal(videoRequests.length, 0);
     }
     assert.equal(errors.length, 0, JSON.stringify(errors)); assert.equal(graphicsErrors.length, 0, JSON.stringify(graphicsErrors)); assert.equal(external.length, 0, JSON.stringify(external));

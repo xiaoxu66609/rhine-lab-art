@@ -8,7 +8,15 @@ import { ExtrudeGeometry, Vector3 } from 'three';
 import { rhineShapes, rhineSVG } from '../src/rhine-shape.mjs';
 import { buildBoot } from './build-boot.mjs';
 import sharp from 'sharp';
-import { brand, slogan, github, studies } from '../src/content.mjs';
+import { brand, slogan, github, promo, live, studies } from '../src/content.mjs';
+
+function pagesBasePath() {
+  const value = (process.env.PAGES_BASE || '').trim();
+  if (!value) return '';
+  const withSlash = value.startsWith('/') ? value : `/${value}`;
+  return withSlash.endsWith('/') ? withSlash : `${withSlash}/`;
+}
+const pagesBase = pagesBasePath();
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const reference = path.join(root, 'vendor/activetheory');
@@ -62,12 +70,12 @@ const placeholder = 'data:video/mp4;base64,AAAAHGZ0eXBNNAACAAACAGlzb21pc28ybXA0M
 app = replace(app, placeholder, 'assets/rhine/01.png', '作品初始媒体');
 
 await adaptModule('WorkDetailContent', input => {
-  let out = replace(input, '_this.video=document.createElement("video")', '_this.video=document.createElement("img"),_this.video.play=_=>{},_this.video.pause=_=>{},_this.video.alt="Rhine Lab archive",_this.video.style.maxHeight="100%",_this.video.style.objectFit="contain"', '详情全屏原图');
+  let out = replace(input, '_this.video=document.createElement("video")', '_this.video=document.createElement("img"),_this.video.play=_=>{},_this.video.pause=_=>{},_this.video.alt="Project X study",_this.video.style.maxHeight="100%",_this.video.style.objectFit="contain"', '详情全屏原图');
   out = replace(out, '"Close Video"', '"Close Image"', '全屏关闭标签');
   out = replace(out, '"Open fullscreen video"', '"Open fullscreen image"', '全屏打开标签');
   out = replace(out, 'color:color})=>{_this.layers.title.setText(title)', 'color:color,thumbnailURL:thumbnailURL})=>{_this.video.src=thumbnailURL;_this.video.alt=title;_this.layers.title.setText(title)', '详情绑定当前原图');
   out = replace(out, 'let camera=await _this.get("WorkDetail/camera");', '_this.imageButton=document.createElement("button");_this.imageButton.textContent="VIEW ORIGINAL ↗";_this.imageButton.setAttribute("aria-label","Open original image");_this.imageButton.style.cssText="position:fixed;right:24px;bottom:28px;z-index:1000;background:#0b1214cc;border:1px solid #ffffff55;color:#eee;padding:12px 16px;font:11px nbarchitekt,monospace;letter-spacing:.06em;cursor:pointer";_this.imageButton.hidden=true;_this.imageButton.onclick=_this.onFullscreenClick;document.body.appendChild(_this.imageButton);_this.bind("Router/state",(route=>{_this.imageButton.hidden=!route.includes("work/")}));let camera=await _this.get("WorkDetail/camera");', '以可访问的原图按钮替代隐藏调试网格');
-  return replace(out, '"Project Link"', '"Source / PRTS"', '素材来源链接');
+  return replace(out, '"Project Link"', '"Project source"', '素材来源链接');
 });
 // Gate the original ready signal on the login's welcome frame. The loader still
 // owns actual asset/scene readiness; only its presentation and handoff change.
@@ -82,24 +90,24 @@ app = replace(app, 'assets/video/reel-frame.jpg', 'assets/daily/hero.jpg', '全�
 await adaptModule('ContactUI', input => {
   let out = input;
   const entries = [
-    ['"CONTACT US"', '"RHINE LAB"'], ['"Contact Us"', '"RHINE LAB"'],
-    ['"LAX"', '"LIFE"'], ['"SYD"', '"SKY"'], ['"NYC"', '"SKY"'], ['"AMS"', '"DREAM"'],
-    ['"Los Angeles"', '"Life"'], ['"New York City"', '"Sky"'], ['"Amsterdam"', '"Dream"'],
-    ['"Privacy Notice"', '"Artwork Sources"'], ['"Newsletter Signup"', '"Hypergryph"'], ['"Careers"', '"Arknights"'],
-    ['"HELLO@ACTIVETHEORY.NET"', '"GITHUB / REVERIEACH"'], ['"Email us at hello@activetheory.net"', '"Project by reverieach on GitHub"'],
+    ['"CONTACT US"', `"${brand}"`], ['"Contact Us"', `"${brand}"`],
+    ['"LAX"', '"PAPER"'], ['"SYD"', '"SCAN"'], ['"NYC"', '"SCORE"'], ['"AMS"', '"OPEN"'],
+    ['"Los Angeles"', '"Paper"'], ['"New York City"', '"Scan"'], ['"Amsterdam"', '"Open"'],
+    ['"Privacy Notice"', '"Repository"'], ['"Newsletter Signup"', '"Live system"'], ['"Careers"', '"Promo site"'],
+    ['"HELLO@ACTIVETHEORY.NET"', '"GITHUB / PROJECT X"'], ['"Email us at hello@activetheory.net"', '"Dalian No.5 Middle School IT"'],
     ['"mailto:hello@activetheory.net"', JSON.stringify(github)],
-    ['"https://mailchi.mp/activetheory/newsletter"', '"https://www.hypergryph.com/"'],
-    ['"https://activetheory.notion.site/privacy"', '"https://prts.wiki/w/莱茵生命"'],
-    ['"https://jobs.lever.co/activetheory"', '"https://ak.hypergryph.com/"'],
-    ['"https://www.instagram.com/activetheory"', JSON.stringify(github)],
+    ['"https://mailchi.mp/activetheory/newsletter"', JSON.stringify(live)],
+    ['"https://activetheory.notion.site/privacy"', JSON.stringify(github)],
+    ['"https://jobs.lever.co/activetheory"', JSON.stringify(promo)],
+    ['"https://www.instagram.com/activetheory"', JSON.stringify(promo)],
     ['"https://www.linkedin.com/company/active-theory/"', JSON.stringify(github)],
-    ['"https://twitter.com/active_theory"', '"https://ak.hypergryph.com/"'],
-    ['"Instagram"', '"Source archive"'], ['"Linked in"', '"Rhine Lab"'], ['"Twitter"', '"Arknights"'],
+    ['"https://twitter.com/active_theory"', JSON.stringify(live)],
+    ['"Instagram"', '"Promo site"'], ['"Linked in"', '"Project X"'], ['"Twitter"', '"Live system"'],
     ['assets/images/ui/ig.png', 'assets/images/ui/globe.png'], ['assets/images/ui/in.png', 'assets/daily/monogram.png'], ['assets/images/ui/tw.png', 'assets/daily/monogram.png']
   ];
   for (const [a, b] of entries) out = replace(out, a, b, `联系内容 ${a}`);
   out = replace(out, 'fontSize:110', 'fontSize:80', '长标题在 About 三列中完整显示');
-  const contactLinks = { email: [github, 'Project by reverieach on GitHub'], subscribe: ['https://www.hypergryph.com/', 'Hypergryph official website'], privacy: ['https://prts.wiki/w/莱茵生命', 'Artwork sources on PRTS'], careers: ['https://ak.hypergryph.com/', 'Arknights official website'] };
+  const contactLinks = { email: [github, 'Project X on GitHub'], subscribe: [live, 'Open the live system'], privacy: [github, 'Project X repository'], careers: [promo, 'Project X promo site'] };
   for (const [name, [url, label]] of Object.entries(contactLinks)) {
     const pattern = new RegExp(`(_this\\.${name}\\.interact\\(hover,\\(_=>window\\.open\\("[^"]*"(?:,"_blank")?\\)\\)),"#"\\)`);
     assert.ok(pattern.test(out), name);
@@ -117,12 +125,13 @@ await adaptModule('ContactUI', input => {
 await adaptModule('ChatDOM', input => {
   let out = input;
   for (const [a, b] of [
-    ['"-> websites","Website"', '"-> lives","Life"'],
-    ['"-> installations","Installation"', '"-> dreams","Dream"'],
-    ['"-> XR / VR / AI","XR"', '"-> the sky","Sky"'],
-    ['"-> multiplayer","Multiplayer"', '"-> power","Power"'],
-    ['"-> games","Game"', '"-> vision","Vision"'],
-    ['"Ask me anything..."', '"Search the archive..."']
+    ['"-> websites","Website"', '"-> paper","Paper"'],
+    ['"-> installations","Installation"', '"-> scan","Scan"'],
+    ['"-> XR / VR / AI","XR"', '"-> scores","Scores"'],
+    ['"-> multiplayer","Multiplayer"', '"-> roles","Roles"'],
+    ['"-> games","Game"', '"-> source","Source"'],
+    ['"What are you looking for?"', '"Which study are you looking for?"'],
+    ['"Ask me anything..."', '"Search the studies..."']
   ]) out = replace(out, a, b, `作品筛选 ${a}`);
   const disclaimerStart = out.indexOf('_this.bind("showDisclaimer"');
   const disclaimerEnd = out.indexOf('_this.listen("Global/loadFinished"', disclaimerStart);
@@ -132,20 +141,20 @@ await adaptModule('ChatDOM', input => {
 });
 app = replace(app, 'https://atlab.io', github, '实验室链接');
 app = replace(app, 'Active Theory · Creative Digital Experiences', `${brand} · ${slogan}`, '文档标题');
-app = replace(app, '${data.title} · Active Theory', '${data.title} · RHINE LAB', '详情文档标题');
+app = replace(app, '${data.title} · Active Theory', '${data.title} · ' + brand, '详情文档标题');
 // 原站 WebMCP 的静态介绍也属于内容，避免读到原机构履历。
 const info = 'Active Theory is a creative digital production studio founded in 2012.';
 const infoStart = app.indexOf(info), infoEnd = app.indexOf('"', infoStart);
 assert.ok(infoStart > 0 && infoEnd > infoStart);
-app = replace(app, app.slice(infoStart, infoEnd), `${brand}. ${slogan} An unofficial Arknights art study in fourteen memories. Original artwork belongs to Hypergryph. Source: ${github}.`, 'WebMCP 品牌介绍');
-app = app.replaceAll('Get more information about Active Theory, the agency that created this website.', `Get more information about ${brand}, the personal art study shown here.`)
+app = replace(app, app.slice(infoStart, infoEnd), `${brand}. ${slogan} Fourteen studies of the school marking system, set in its paper-edge skin. Source: ${github}.`, 'WebMCP 品牌介绍');
+app = app.replaceAll('Get more information about Active Theory, the agency that created this website.', `Get more information about ${brand}.`)
   .replaceAll('Open the contact modal for Active Theory.', `Open the contact modal for ${brand}.`)
-  .replaceAll('Please use the provided email to reach out.', 'Explore the source archive.');
+  .replaceAll('Please use the provided email to reach out.', 'Open the project repository.');
 app = replace(app, '_workPages.refresh([..._workData.slice(0,14).shuffle()])', '_workPages.refresh(_workData.slice(0,14))', '十四展品固定叙事顺序');
 app = replace(app, '_workData.filter((element=>element.tags.includes(tag))).shuffle().slice(0,14)', '_workData.filter((element=>element.tags.includes(tag))).slice(0,14)', '筛选保留档案顺序');
-app = replace(app, '${new Date(data.completionDate).getFullYear()}\\n${data.clientName}', 'ARCHIVE ${String(data.priority).padStart(2,"0")} / 14\\n${data.clientName}', '档案编号替代制作年份');
+app = replace(app, '${new Date(data.completionDate).getFullYear()}\\n${data.clientName}', 'STUDY ${String(data.priority).padStart(2,"0")} / 14\\n${data.clientName}', '档案编号替代制作年份');
 await adaptModule('NavUI', input => {
-  let out = replace(replace(input, 'text:"Work"', 'text:"Archive"', '作品导航文案'), 'text:"Contact"', 'text:"About"', '关于导航文案');
+  let out = replace(replace(input, 'text:"Work"', 'text:"Studies"', '作品导航文案'), 'text:"Contact"', 'text:"About"', '关于导航文案');
   out = replace(out, '_this.work.wrapper.x=_this.bg.x+80', '_this.work.wrapper.x=_this.bg.x+.22*_this.bg.width', '导航左侧文字留白');
   out = replace(out, '_this.contact.wrapper.x=_this.bg.x+_this.bg.width*Math.mix(.6,.5,Tests.noMusic()?1:0)-2', '_this.contact.wrapper.x=_this.bg.x+.66*_this.bg.width', '导航右侧文字留白');
   out = replace(out, '_this.audio.x=_this.bg.x+.5*_this.bg.width-_this.audio.width/2-13', '_this.audio.x=_this.bg.x+.5*_this.bg.width-_this.audio.width/2', '波形精确居中');
@@ -154,6 +163,11 @@ await adaptModule('NavUI', input => {
 });
 app = replace(app, 'let link=_this.params.text.toLowerCase();', 'let link=_this.params.text.toLowerCase();if(link==="about")link="contact";', '关于按钮保留原路由');
 app = replace(app, '_room&&_room.updateUserData(_this.data)', '_room?.updateUserData?.(_this.data)', '初始化房间尚未可写时保留本地播放器状态');
+if (pagesBase) {
+  const marker = 'Inherit(_this,Router,null,"")';
+  assert.equal(app.split(marker).length - 1, 1, '路由根路径不唯一');
+  app = replace(app, marker, `Inherit(_this,Router,null,${JSON.stringify(pagesBase)})`, '静态站点子路径');
+}
 await write('assets/js/app.1780406240914.js', app);
 
 let html = await fs.readFile(path.join(reference, 'index.html'), 'utf8');
@@ -163,19 +177,27 @@ html = html.replaceAll('Active Theory · Creative Digital Experiences', `${brand
   .replaceAll('https://activetheory.net', '/').replaceAll('content="Active Theory"', `content="${brand}"`)
   .replace(/\s*<script>\s*window\.dataLayer[\s\S]*?<\/script>/, '');
 const bootBridge = await buildBoot(root, write);
-html = html.replace('<head>', '<head>' + bootBridge);
+const assetPrefix = pagesBase
+  ? `<base href="${pagesBase}"><script>window.HYDRA_ASSETS_CDN=${JSON.stringify(pagesBase)};(function(){var base=${JSON.stringify(pagesBase.slice(0, -1))};var orig=window.fetch;window.fetch=function(input,init){if(typeof input==="string"&&input.charAt(0)==="/"&&input.charAt(1)!=="/"&&input.indexOf(base+"/")!==0)input=base+input;return orig.call(this,input,init);};})();</script>`
+  : '<base href="/">';
+html = html.replace('<base href="/">', '');
+html = html.replace('<head>', '<head>' + assetPrefix + bootBridge);
 await write('index.html', html);
+if (pagesBase) {
+  await write('404.html', html);
+  await write('.nojekyll', '');
+}
 
 const uil = JSON.parse(await fs.readFile(path.join(frozen, 'uil.1780406240914.json'), 'utf8'));
 const changedUIL = [];
 function set(key, value) { assert.ok(key in uil, key); changedUIL.push({ key, before: uil[key], after: value }); uil[key] = value; }
-set('INPUT_Element_3_About_text3d_text', 'Rhine\nLab');
-set('INPUT_Element_4_About_text3d_text', 'The shape of a dream.\n\nLife / Memory / The Sky\n\nFourteen fragments from Rhine Lab. A personal Arknights art study.');
-set('INPUT_Element_5_WorkDetailContent_text3d_text', 'ORIGIN');
-set('INPUT_Element_8_WorkDetailContent_text3d_text', '01 / 14\nRHINE LAB\nARCHIVE');
+set('INPUT_Element_3_About_text3d_text', 'Project\nX');
+set('INPUT_Element_4_About_text3d_text', 'From the desk to the record.\n\nPaper / Scan / Scores\n\nFourteen studies of Project-X, in the paper edge of the school system.');
+set('INPUT_Element_5_WorkDetailContent_text3d_text', 'PAPER');
+set('INPUT_Element_8_WorkDetailContent_text3d_text', '01 / 14\nPROJECT X\nSTUDIES');
 set('MESH_Element_22_CleanRoomscale', [.66, .33, 1]);
-set('INPUT_Element_15_CleanRoom_text3d_text', '// THE\nSKY ->');
-set('INPUT_Element_20_CleanRoom_text3d_text', 'A question beyond the horizon. A responsibility to those who remain.');
+set('INPUT_Element_15_CleanRoom_text3d_text', '// THE\nDESK ->');
+set('INPUT_Element_20_CleanRoom_text3d_text', 'A paper edge for work that stays inside the school.');
 for (const [key, filename] of [
   ['INPUT_Config_2_About_geometry', 'monogram-home.json'],
   ['INPUT_Config_8_ParticleTest_geometry', 'monogram-home.json'],
@@ -210,7 +232,7 @@ for (const size of [16, 32, 180]) {
   const image = await sharp(Buffer.from(svg)).resize(size, size, { fit: 'contain', background: '#000' }).png().toBuffer();
   await write(`assets/meta/${size === 180 ? 'apple-touch-icon' : `favicon-${size}x${size}`}.png`, image);
 }
-await write('assets/meta/manifest.json', JSON.stringify({ name: brand, short_name: brand, start_url: '/', display: 'standalone', background_color: '#000', theme_color: '#000' }));
+await write('assets/meta/manifest.json', JSON.stringify({ name: brand, short_name: brand, start_url: pagesBase || '/', display: 'standalone', background_color: '#000', theme_color: '#000' }));
 await write('assets/meta/safari-pinned-tab.svg', svg);
 
 // 只替换模型顶点；各场景位置、旋转、比例、材质和响应函数不变。
@@ -246,6 +268,6 @@ assert.ok(sceneConfig && app.includes(sceneConfig), '场景序列或滚动参数
 const shaderBytes = await fs.readFile(path.join(publicDir, 'assets/shaders/compiled.vs'));
 const shaderOriginal = await fs.readFile(path.join(frozen, 'compiled.vs')).catch(() => shaderBytes);
 assert.equal(sha(shaderBytes), sha(shaderOriginal));
-const manifest = { date: '2026-10-14', originalVersion: '1780406240914', brand, slogan, github, projectCount: studies.length, patches: changes, contentFields: changedUIL, preservedModules: preserved, sceneConfig, shaders: { sha256: sha(shaderBytes), identical: true }, runtimeSHA256: sha(app), originalRuntimeSHA256: sha(sourceApp), videoPolicy: '全部使用 14 张原始 1600×900 CG，保留原媒体切换、实时粒子与光学效果', sharedAssets: 'public/assets' };
+const manifest = { date: '2026-10-18', originalVersion: '1780406240914', brand, slogan, github, projectCount: studies.length, patches: changes, contentFields: changedUIL, preservedModules: preserved, sceneConfig, shaders: { sha256: sha(shaderBytes), identical: true }, runtimeSHA256: sha(app), originalRuntimeSHA256: sha(sourceApp), videoPolicy: '十四张 1600×900 纸锋展板，保留原媒体切换、实时粒子与光学效果', sharedAssets: 'public/assets' };
 await fs.writeFile(path.join(analysis, 'adaptation-manifest.json'), JSON.stringify(manifest, null, 2));
-console.log(`原版动效模块 ${preserved.length} 项逐字节一致；14 段莱茵档案、莱茵三维标志与登录序列已接入。`);
+console.log(`原版动效模块 ${preserved.length} 项逐字节一致；14 段 Project-X 纸锋研究、原三维标志与登录序列已接入。`);
