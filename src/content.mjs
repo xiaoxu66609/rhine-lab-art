@@ -1,33 +1,37 @@
-export const github = 'https://github.com/reverieach/rhine-lab-art';
-export const brand = 'RHINE LAB';
-export const slogan = 'The shape of a dream.';
+export const github = 'https://github.com/Dalian-No-5-Middle-School-I-T-C/Project-X';
+export const promo = 'https://xiaoxu66609.github.io/Project-X-promo-site/';
+export const live = 'https://dl5zx.cn/';
+export const brand = 'PROJECT X';
+export const slogan = 'From the desk to the record.';
 
-// A thematic exhibition, not a chronological retelling. Captions are original fan writing.
+// Exhibition copy for the school system. The stage, shaders and timing stay on the original path.
 const chapters = [
-  ['Origin', '8da8bd', 'Vision, Kristen', 'Different dreams once shared a single address. Kristen looks toward a sky whose limits she refuses to accept. What begins as a question becomes an institution. / Lone Trail: CW-10 END.'],
-  ['A Name', 'd5a07f', 'Life, Ifrit, Silence', 'She has a name, and a future of her own. In the space between Silence and Ifrit, research acquires a responsibility that no result can erase. / Lone Trail: CW-9 END.'],
-  ['Fracture', 'afa6bf', 'Power, Hooleyak', 'Ambition does not belong to science alone. With Hooleyak, knowledge becomes a bargain: the same horizon can conceal very different intentions. / Lone Trail: CW-6 BEG.'],
-  ['The Dream', 'b7c6a6', 'Dream, Dorothy', 'What if pain could be kept outside a dream? Dorothy imagines a refuge for people whose lives have been made expendable. The tenderness of that wish makes its cost harder to see. / Dorothy\'s Vision: DV-8 END.'],
-  ['The Subjects', '9cbbc1', 'Life, Dorothy', 'Beyond the promise of peace, someone is still waiting to wake. A laboratory can count its subjects; responsibility begins when it sees the people inside those numbers. / Dorothy\'s Vision: DV-6 BEG.'],
-  ['Awakening', 'c1b49f', 'Dream, Choice', 'A future cannot be given without the freedom to refuse it. Waking breaks the perfect enclosure and returns uncertainty, pain and possibility to the people who must live with them. / Dorothy\'s Vision: DV-8 END.'],
-  ['Horizon', '95afc4', 'Sky, Kristen', 'Another question remains overhead. Beyond the laboratory and its fractures, the sky persists as an unfinished experiment. Every answer makes the boundary more visible. / Dorothy\'s Vision: DV-ST-2.'],
-  ['Intersection', 'b4a7bd', 'Life, Saria, Kristen', 'Paths that separated meet again. Shared history survives disagreement, but it cannot make the next decision for either person. / Lone Trail: CW-6 END.'],
-  ['Ascent', 'b7c4d1', 'Sky, Kristen', 'All eyes turn toward the same sky. An impossible machine rises on accumulated labor, sacrifice and belief. The dream is singular; its consequences are shared. / Lone Trail: CW-8 END.'],
-  ['Parting', 'b2afc8', 'Sky, Saria, Kristen', 'To have travelled together is not to share the final destination. At the threshold, devotion and refusal can look like opposite forms of the same care. / Lone Trail: CW-10 BEG.'],
-  ['Daybreak', 'd6b990', 'Life, Dorothy', 'A pause in the ascent: morning returns us to the world below. This memory from Dorothy\'s Vision asks what remains worth protecting, even while someone reaches for the stars. / Dorothy\'s Vision: DV-8 BEG.'],
-  ['Farewell', 'a3b8d5', 'Sky, Kristen', 'At last, the imagined distance becomes a view. Discovery opens a world and leaves another behind. The farewell belongs as much to those below as to the traveller. / Lone Trail: CW-ST-4.'],
-  ['Belonging', 'b5c8bc', 'Life, Muelsyse', 'Those who remain must also find a way forward. Belonging is neither a perfect institution nor a sealed refuge; it is the possibility of being understood by another person. / Lone Trail: CW-ST-3.'],
-  ['The Way Forward', 'c7bba6', 'Life, Silence, Saria', 'The future also begins with a hand offered to someone beside you. After the ascent, Silence and Saria bring the exhibition back to a human scale: care, consequence, and the work that continues. / Lone Trail: CW-ST-3.']
+  ['Paper', '2e44ff', 'Paper, Skin', 'Paper Edge is the default face of the system: warm paper, ink, and a hard edge. Flat 2.0 stays one switch away. / Project-X promo site.', 'SKIN', 'The default face of the system.', `${promo}#screenshot`],
+  ['The Desk', '1f30c8', 'Paper, Desk', 'The home desk opens on the work itself. Answer sheets, exams, scores and accounts share one paper surface, and the latest marked paper is one step away. / Live system.', 'HOME', 'Modules, shortcuts, the latest scores.', live],
+  ['Sheets', '1a1917', 'Paper, Design', 'Answer sheets are drawn in the browser: choice blocks, blanks, pictures, notes and subject templates, then exported as a PDF for the printer. / Promo site, modules.', 'DESIGN', 'A sheet, set to the millimetre.', `${promo}#modules`],
+  ['The Exam', '4a4842', 'Scores, Exam', 'One exam can be a morning test, open to the teachers who need it, or a formal paper with a tighter lock. The office can change that mode later. / Promo site, modules.', 'EXAM', 'A morning test, or a formal paper.', `${promo}#modules`],
+  ['The Scan', '2436d6', 'Scan, Twain', 'The Windows desk scans through TWAIN, or takes a folder of images. Progress stays visible, a batch can be cancelled, and a stuck minute is a fault, not a result. / Promo site, the scan.', 'SCAN', 'The scanner stays in the room.', `${promo}#flow`],
+  ['Marking', '6f6d66', 'Scores, Marking', 'Filled boxes are read by the recognition engine. Written answers are cut into blocks for two or three markers, and a wide gap goes to arbitration. The teacher still marks the handwriting. / Promo site, marking.', 'MARK', 'The engine reads. The teacher marks.', `${promo}#flow`],
+  ['The Record', '1d1d1b', 'Scores, Record', 'Class rank, spread, difficulty and discrimination stay with the paper. A weak knowledge point can be named. The score itself remains the school record. / Promo site, scores.', 'RECORD', 'Rank, spread, and the weak point.', `${promo}#modules`],
+  ['Two Skins', '3a46e6', 'Paper, Skin', 'Before the first login the school chooses a skin. Paper Edge is the print face. Flat 2.0 is the other. The choice is kept on the account. / Promo site, the two previews.', 'CHOICE', 'Paper Edge, or Flat.', `${promo}#screenshot`],
+  ['Calendar', '5c584f', 'Scores, Calendar', 'Exams sit on the days they happen. A group of papers can share a grade. The office sees the term before it sees another table. / Promo site, calendar.', 'DATE', 'The term, laid on a calendar.', `${promo}#screenshot`],
+  ['The Week', '1520a8', 'Scores, Audit', 'The weekly audit counts the papers, compares classes, and lists the weak items. A week can be published, and recent weeks can be filled in. / Promo site, weekly audit.', 'WEEK', 'What the week actually marked.', `${promo}#screenshot`],
+  ['Reading', '2a2926', 'Scores, Insight', 'A model can read the paper and name a weak point. It does not mark the written answer. The model can be changed, or turned off. / Promo site, AI notes.', 'READING', 'A model may read. It does not mark.', `${promo}#ai`],
+  ['On Site', '4e5bff', 'Source, Campus', 'The promo site argues against a rented marking service: the scores sit on the school server, a template can be changed in the room, and the people who keep it are already there. / Promo site, comparison.', 'CAMPUS', 'The record stays in the school.', `${promo}#compare`],
+  ['The Roles', '3f3c36', 'Roles, Access', 'The office opens an exam. A marker takes the next paper. A tutor reads the class. A student sees only their own result. The lock is the point. / Promo site, roles.', 'ROLES', 'Four desks, one lock.', promo],
+  ['Open', '10100f', 'Source, Open', 'Project-X is published under GPL-3.0 by the IT center of Dalian No.5 Middle School. The promo site is the front door. The repository is the work. / Main repository.', 'SOURCE', 'The system is public.', github]
 ];
-const files = ['Avg_38_i04.png','Avg_38_i09.png','Avg_38_i03.png','Avg_29_i06.png','Avg_29_i03.png','Avg_29_i07.png','Avg_29_i10.png','Avg_38_i06.png','Avg_38_i10.png','Avg_38_i08.png','Avg_29_i12.png','Avg_38_i12.png','Avg_38_i05.png','Avg_38_i13.png'];
-export const studies = chapters.map(([name, uiColor, tags, description], index) => {
+
+export const plates = chapters.map(([name, , , , kicker, line], index) => ({ name, kicker, line, index }));
+
+export const studies = chapters.map(([name, uiColor, tags, description, , , projectURL], index) => {
   const number = String(index + 1).padStart(2, '0');
   const slug = name.toLowerCase().replaceAll(' ', '-');
   const thumbnail = `/assets/rhine/${number}.png`;
   return {
-    id: `rhine-${number}`, name, slug, description, uiColor, tags,
-    clientName: `RHINE LAB / ARCHIVE ${number}`, completionDate: '2026-10-14T00:00:00.000Z',
-    priority: index + 1, projectURL: `https://prts.wiki/w/文件:${files[index]}`,
+    id: `study-${number}`, name, slug, description, uiColor, tags,
+    clientName: `PROJECT X / STUDY ${number}`, completionDate: '2026-08-22T00:00:00.000Z',
+    priority: index + 1, projectURL,
     projectLogo: { url: '/assets/daily/wordmark.png', width: 400, height: 200 },
     video: { url: thumbnail, thumbnail }
   };

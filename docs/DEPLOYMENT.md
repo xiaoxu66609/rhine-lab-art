@@ -12,7 +12,9 @@
 4. 将 Nginx 示例中的 `example.com` 换成自己的域名，安装为站点配置；执行 `nginx -t` 后再重载。
 5. 为自己的域名配置 DNS、HTTPS 和续期。不要用本仓库的 HTTP 示例覆盖已经配置好的证书与跳转。只按需要开放公网 80/443，Node 的 4199 端口保持内部访问。
 
-检查首页、`/work/daybreak` 等深链接、十四幅展品、音乐与 `/ws`。证书续期需要单独验证。域名合规要求与云平台账户流程由部署者按实际环境办理；本仓库不记录任何个人备案或账户信息。
+检查首页、`/work/paper` 等深链接、十四幅展板、音乐与 `/ws`。证书续期需要单独验证。域名合规要求与云平台账户流程由部署者按实际环境办理；本仓库不记录任何个人备案或账户信息。
+
+GitHub Pages 不是这套 Node 服务的替代。当前静态地址是 https://xiaoxu66609.github.io/Project-X-promo-site/stage/ ，对应 `PAGES_BASE=/Project-X-promo-site/stage/`。这个仓库本身没有 Pages 权限。
 
 ## Render 模板
 

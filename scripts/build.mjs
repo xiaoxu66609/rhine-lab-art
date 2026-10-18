@@ -8,7 +8,15 @@ import { ExtrudeGeometry, Vector3 } from 'three';
 import { rhineShapes, rhineSVG } from '../src/rhine-shape.mjs';
 import { buildBoot } from './build-boot.mjs';
 import sharp from 'sharp';
-import { brand, slogan, github, studies } from '../src/content.mjs';
+import { brand, slogan, github, promo, live, studies } from '../src/content.mjs';
+
+function pagesBasePath() {
+  const value = (process.env.PAGES_BASE || '').trim();
+  if (!value) return '';
+  const withSlash = value.startsWith('/') ? value : `/${value}`;
+  return withSlash.endsWith('/') ? withSlash : `${withSlash}/`;
+}
+const pagesBase = pagesBasePath();
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const reference = path.join(root, 'vendor/activetheory');
@@ -62,12 +70,14 @@ const placeholder = 'data:video/mp4;base64,AAAAHGZ0eXBNNAACAAACAGlzb21pc28ybXA0M
 app = replace(app, placeholder, 'assets/rhine/01.png', '作品初始媒体');
 
 await adaptModule('WorkDetailContent', input => {
-  let out = replace(input, '_this.video=document.createElement("video")', '_this.video=document.createElement("img"),_this.video.play=_=>{},_this.video.pause=_=>{},_this.video.alt="Rhine Lab archive",_this.video.style.maxHeight="100%",_this.video.style.objectFit="contain"', '详情全屏原图');
+  let out = replace(input, '_this.video=document.createElement("video")', '_this.video=document.createElement("img"),_this.video.play=_=>{},_this.video.pause=_=>{},_this.video.alt="Project X study",_this.video.style.maxHeight="100%",_this.video.style.objectFit="contain"', '详情全屏原图');
   out = replace(out, '"Close Video"', '"Close Image"', '全屏关闭标签');
   out = replace(out, '"Open fullscreen video"', '"Open fullscreen image"', '全屏打开标签');
-  out = replace(out, 'color:color})=>{_this.layers.title.setText(title)', 'color:color,thumbnailURL:thumbnailURL})=>{_this.video.src=thumbnailURL;_this.video.alt=title;_this.layers.title.setText(title)', '详情绑定当前原图');
-  out = replace(out, 'let camera=await _this.get("WorkDetail/camera");', '_this.imageButton=document.createElement("button");_this.imageButton.textContent="VIEW ORIGINAL ↗";_this.imageButton.setAttribute("aria-label","Open original image");_this.imageButton.style.cssText="position:fixed;right:24px;bottom:28px;z-index:1000;background:#0b1214cc;border:1px solid #ffffff55;color:#eee;padding:12px 16px;font:11px nbarchitekt,monospace;letter-spacing:.06em;cursor:pointer";_this.imageButton.hidden=true;_this.imageButton.onclick=_this.onFullscreenClick;document.body.appendChild(_this.imageButton);_this.bind("Router/state",(route=>{_this.imageButton.hidden=!route.includes("work/")}));let camera=await _this.get("WorkDetail/camera");', '以可访问的原图按钮替代隐藏调试网格');
-  return replace(out, '"Project Link"', '"Source / PRTS"', '素材来源链接');
+  out = replace(out, 'top: 22px;\\n        right: 22px;\\n        z-index: 3;\\n\\n        width: 18px;\\n        height: 18px;\\n\\n        border: none;\\n        background: transparent url(${Assets.getPath("assets/images/ui/close.svg")});\\n        background-size: cover;', 'top: max(12px, env(safe-area-inset-top));\\n        right: max(12px, env(safe-area-inset-right));\\n        z-index: 3;\\n\\n        width: 44px;\\n        height: 44px;\\n\\n        border: none;\\n        background: transparent url(${Assets.getPath("assets/images/ui/close.svg")});\\n        background-size: 18px 18px;', '全屏关闭按钮达到触控尺寸');
+  out = replace(out, 'color:color})=>{_this.layers.title.setText(title)', 'color:color,thumbnailURL:thumbnailURL})=>{_this.video.src=((window.HYDRA_ASSETS_CDN||"")+thumbnailURL).replace(/([^:])\\/{2,}/g,"$1/");_this.video.alt=title;_this.layers.title.setText(title)', '详情绑定当前原图');
+  out = replace(out, 'let camera=await _this.get("WorkDetail/camera");', '_this.imageButton=document.createElement("button");_this.imageButton.textContent="VIEW ORIGINAL ↗";_this.imageButton.setAttribute("aria-label","Open original image");_this.imageButton.style.cssText="position:fixed;right:max(16px, env(safe-area-inset-right));bottom:max(20px, env(safe-area-inset-bottom));z-index:1000;background:#0b1214cc;border:1px solid #ffffff55;color:#eee;padding:12px 16px;min-height:44px;font:11px nbarchitekt,monospace;letter-spacing:.06em;cursor:pointer;touch-action:manipulation";_this.imageButton.hidden=true;_this.imageButton.onclick=_this.onFullscreenClick;document.body.appendChild(_this.imageButton);_this.bind("Router/state",(route=>{_this.imageButton.hidden=!route.includes("work/")}));let camera=await _this.get("WorkDetail/camera");', '以可访问的原图按钮替代隐藏调试网格');
+  out = replace(out, '}else _this.layers.title.group.scale.copy(_this.layers.title.originTransform.scale),_this.layers.video.scale.copy(_this.layers.video.originTransform.scale),_this.layers.title.group.position.copy(_this.layers.title.originTransform.position),_this.layers.date.group.position.copy(_this.layers.date.originTransform.position)}))', '}else if(Stage.height>Stage.width){let visible=5*Stage.width/Stage.height,fit=Math.min(1,visible*.9/4.5),limit=visible*.42;_this.layers.video.scale.copy(_this.layers.video.originTransform.scale),_this.layers.video.scale.x*=fit,_this.layers.video.scale.y*=fit;for(let layer of Object.values(_this.layers)){let group=layer&&layer.group,origin=layer&&layer.originTransform;if(!group||!origin||layer===_this.layers.video)continue;group.position.copy(origin.position),group.scale.copy(origin.scale),Math.abs(group.position.x)>limit&&(group.position.x=Math.sign(group.position.x)*limit)}}else _this.layers.title.group.scale.copy(_this.layers.title.originTransform.scale),_this.layers.video.scale.copy(_this.layers.video.originTransform.scale),_this.layers.title.group.position.copy(_this.layers.title.originTransform.position),_this.layers.date.group.position.copy(_this.layers.date.originTransform.position)}))', '竖屏详情收进可视宽度');
+  return replace(out, '"Project Link"', '"Project source"', '素材来源链接');
 });
 // Gate the original ready signal on the login's welcome frame. The loader still
 // owns actual asset/scene readiness; only its presentation and handoff change.
@@ -82,24 +92,24 @@ app = replace(app, 'assets/video/reel-frame.jpg', 'assets/daily/hero.jpg', '全�
 await adaptModule('ContactUI', input => {
   let out = input;
   const entries = [
-    ['"CONTACT US"', '"RHINE LAB"'], ['"Contact Us"', '"RHINE LAB"'],
-    ['"LAX"', '"LIFE"'], ['"SYD"', '"SKY"'], ['"NYC"', '"SKY"'], ['"AMS"', '"DREAM"'],
-    ['"Los Angeles"', '"Life"'], ['"New York City"', '"Sky"'], ['"Amsterdam"', '"Dream"'],
-    ['"Privacy Notice"', '"Artwork Sources"'], ['"Newsletter Signup"', '"Hypergryph"'], ['"Careers"', '"Arknights"'],
-    ['"HELLO@ACTIVETHEORY.NET"', '"GITHUB / REVERIEACH"'], ['"Email us at hello@activetheory.net"', '"Project by reverieach on GitHub"'],
+    ['"CONTACT US"', `"${brand}"`], ['"Contact Us"', `"${brand}"`],
+    ['"LAX"', '"PAPER"'], ['"SYD"', '"SCAN"'], ['"NYC"', '"SCORE"'], ['"AMS"', '"OPEN"'],
+    ['"Los Angeles"', '"Paper"'], ['"New York City"', '"Scan"'], ['"Amsterdam"', '"Open"'],
+    ['"Privacy Notice"', '"Repository"'], ['"Newsletter Signup"', '"Live system"'], ['"Careers"', '"Promo site"'],
+    ['"HELLO@ACTIVETHEORY.NET"', '"GITHUB / PROJECT X"'], ['"Email us at hello@activetheory.net"', '"Dalian No.5 Middle School IT"'],
     ['"mailto:hello@activetheory.net"', JSON.stringify(github)],
-    ['"https://mailchi.mp/activetheory/newsletter"', '"https://www.hypergryph.com/"'],
-    ['"https://activetheory.notion.site/privacy"', '"https://prts.wiki/w/莱茵生命"'],
-    ['"https://jobs.lever.co/activetheory"', '"https://ak.hypergryph.com/"'],
-    ['"https://www.instagram.com/activetheory"', JSON.stringify(github)],
+    ['"https://mailchi.mp/activetheory/newsletter"', JSON.stringify(live)],
+    ['"https://activetheory.notion.site/privacy"', JSON.stringify(github)],
+    ['"https://jobs.lever.co/activetheory"', JSON.stringify(promo)],
+    ['"https://www.instagram.com/activetheory"', JSON.stringify(promo)],
     ['"https://www.linkedin.com/company/active-theory/"', JSON.stringify(github)],
-    ['"https://twitter.com/active_theory"', '"https://ak.hypergryph.com/"'],
-    ['"Instagram"', '"Source archive"'], ['"Linked in"', '"Rhine Lab"'], ['"Twitter"', '"Arknights"'],
+    ['"https://twitter.com/active_theory"', JSON.stringify(live)],
+    ['"Instagram"', '"Promo site"'], ['"Linked in"', '"Project X"'], ['"Twitter"', '"Live system"'],
     ['assets/images/ui/ig.png', 'assets/images/ui/globe.png'], ['assets/images/ui/in.png', 'assets/daily/monogram.png'], ['assets/images/ui/tw.png', 'assets/daily/monogram.png']
   ];
   for (const [a, b] of entries) out = replace(out, a, b, `联系内容 ${a}`);
   out = replace(out, 'fontSize:110', 'fontSize:80', '长标题在 About 三列中完整显示');
-  const contactLinks = { email: [github, 'Project by reverieach on GitHub'], subscribe: ['https://www.hypergryph.com/', 'Hypergryph official website'], privacy: ['https://prts.wiki/w/莱茵生命', 'Artwork sources on PRTS'], careers: ['https://ak.hypergryph.com/', 'Arknights official website'] };
+  const contactLinks = { email: [github, 'Project X on GitHub'], subscribe: [live, 'Open the live system'], privacy: [github, 'Project X repository'], careers: [promo, 'Project X promo site'] };
   for (const [name, [url, label]] of Object.entries(contactLinks)) {
     const pattern = new RegExp(`(_this\\.${name}\\.interact\\(hover,\\(_=>window\\.open\\("[^"]*"(?:,"_blank")?\\)\\)),"#"\\)`);
     assert.ok(pattern.test(out), name);
@@ -117,35 +127,39 @@ await adaptModule('ContactUI', input => {
 await adaptModule('ChatDOM', input => {
   let out = input;
   for (const [a, b] of [
-    ['"-> websites","Website"', '"-> lives","Life"'],
-    ['"-> installations","Installation"', '"-> dreams","Dream"'],
-    ['"-> XR / VR / AI","XR"', '"-> the sky","Sky"'],
-    ['"-> multiplayer","Multiplayer"', '"-> power","Power"'],
-    ['"-> games","Game"', '"-> vision","Vision"'],
-    ['"Ask me anything..."', '"Search the archive..."']
+    ['"-> websites","Website"', '"-> paper","Paper"'],
+    ['"-> installations","Installation"', '"-> scan","Scan"'],
+    ['"-> XR / VR / AI","XR"', '"-> scores","Scores"'],
+    ['"-> multiplayer","Multiplayer"', '"-> roles","Roles"'],
+    ['"-> games","Game"', '"-> source","Source"'],
+    ['"What are you looking for?"', '"Which study are you looking for?"'],
+    ['"Ask me anything..."', '"Search the studies..."']
   ]) out = replace(out, a, b, `作品筛选 ${a}`);
   const disclaimerStart = out.indexOf('_this.bind("showDisclaimer"');
   const disclaimerEnd = out.indexOf('_this.listen("Global/loadFinished"', disclaimerStart);
   assert.ok(disclaimerStart >= 0 && disclaimerEnd > disclaimerStart);
   out = replace(out, out.slice(disclaimerStart, disclaimerEnd), '', '移除原机构聊天记录提示和隐私链接');
+  out = replace(out, 'a {\\n        color: #c6c6c6;\\n        pointer-events: auto;\\n        cursor: pointer;\\n\\n        font-weight: 700;', 'a {\\n        color: #c6c6c6;\\n        pointer-events: auto;\\n        cursor: pointer;\\n        display: inline-flex;\\n        align-items: center;\\n        min-height: 44px;\\n        padding: 10px 6px;\\n\\n        font-weight: 700;', '筛选链接适合手指');
+  out = replace(out, 'min-height: 40px;', 'min-height: 44px;', '搜索框适合手指');
+  out = replace(out, 'link.onclick=async _=>{_this.get("disableFiltering",!0)||', 'link.addEventListener("touchend",(e)=>{e.stopPropagation(),link.onclick&&link.onclick(e)}),link.onclick=async _=>{_this.get("disableFiltering",!0)||', '手指点筛选');
   return out;
 });
 app = replace(app, 'https://atlab.io', github, '实验室链接');
 app = replace(app, 'Active Theory · Creative Digital Experiences', `${brand} · ${slogan}`, '文档标题');
-app = replace(app, '${data.title} · Active Theory', '${data.title} · RHINE LAB', '详情文档标题');
+app = replace(app, '${data.title} · Active Theory', '${data.title} · ' + brand, '详情文档标题');
 // 原站 WebMCP 的静态介绍也属于内容，避免读到原机构履历。
 const info = 'Active Theory is a creative digital production studio founded in 2012.';
 const infoStart = app.indexOf(info), infoEnd = app.indexOf('"', infoStart);
 assert.ok(infoStart > 0 && infoEnd > infoStart);
-app = replace(app, app.slice(infoStart, infoEnd), `${brand}. ${slogan} An unofficial Arknights art study in fourteen memories. Original artwork belongs to Hypergryph. Source: ${github}.`, 'WebMCP 品牌介绍');
-app = app.replaceAll('Get more information about Active Theory, the agency that created this website.', `Get more information about ${brand}, the personal art study shown here.`)
+app = replace(app, app.slice(infoStart, infoEnd), `${brand}. ${slogan} Fourteen studies of the school marking system, set in its paper-edge skin. Source: ${github}.`, 'WebMCP 品牌介绍');
+app = app.replaceAll('Get more information about Active Theory, the agency that created this website.', `Get more information about ${brand}.`)
   .replaceAll('Open the contact modal for Active Theory.', `Open the contact modal for ${brand}.`)
-  .replaceAll('Please use the provided email to reach out.', 'Explore the source archive.');
+  .replaceAll('Please use the provided email to reach out.', 'Open the project repository.');
 app = replace(app, '_workPages.refresh([..._workData.slice(0,14).shuffle()])', '_workPages.refresh(_workData.slice(0,14))', '十四展品固定叙事顺序');
 app = replace(app, '_workData.filter((element=>element.tags.includes(tag))).shuffle().slice(0,14)', '_workData.filter((element=>element.tags.includes(tag))).slice(0,14)', '筛选保留档案顺序');
-app = replace(app, '${new Date(data.completionDate).getFullYear()}\\n${data.clientName}', 'ARCHIVE ${String(data.priority).padStart(2,"0")} / 14\\n${data.clientName}', '档案编号替代制作年份');
+app = replace(app, '${new Date(data.completionDate).getFullYear()}\\n${data.clientName}', 'STUDY ${String(data.priority).padStart(2,"0")} / 14\\n${data.clientName}', '档案编号替代制作年份');
 await adaptModule('NavUI', input => {
-  let out = replace(replace(input, 'text:"Work"', 'text:"Archive"', '作品导航文案'), 'text:"Contact"', 'text:"About"', '关于导航文案');
+  let out = replace(replace(input, 'text:"Work"', 'text:"Studies"', '作品导航文案'), 'text:"Contact"', 'text:"About"', '关于导航文案');
   out = replace(out, '_this.work.wrapper.x=_this.bg.x+80', '_this.work.wrapper.x=_this.bg.x+.22*_this.bg.width', '导航左侧文字留白');
   out = replace(out, '_this.contact.wrapper.x=_this.bg.x+_this.bg.width*Math.mix(.6,.5,Tests.noMusic()?1:0)-2', '_this.contact.wrapper.x=_this.bg.x+.66*_this.bg.width', '导航右侧文字留白');
   out = replace(out, '_this.audio.x=_this.bg.x+.5*_this.bg.width-_this.audio.width/2-13', '_this.audio.x=_this.bg.x+.5*_this.bg.width-_this.audio.width/2', '波形精确居中');
@@ -154,6 +168,50 @@ await adaptModule('NavUI', input => {
 });
 app = replace(app, 'let link=_this.params.text.toLowerCase();', 'let link=_this.params.text.toLowerCase();if(link==="about")link="contact";', '关于按钮保留原路由');
 app = replace(app, '_room&&_room.updateUserData(_this.data)', '_room?.updateUserData?.(_this.data)', '初始化房间尚未可写时保留本地播放器状态');
+if (pagesBase) {
+  const marker = 'Inherit(_this,Router,null,"")';
+  assert.equal(app.split(marker).length - 1, 1, '路由根路径不唯一');
+  app = replace(app, marker, `Inherit(_this,Router,null,${JSON.stringify(pagesBase)})`, '静态站点子路径');
+  // 纹理路径已经由 absolutePath 按 HYDRA_BASE_PATH 拼接。再给 Assets.CDN 加前缀会变成 stage//…/stage/assets。
+  app = replace(app, '_this.video.src=((window.HYDRA_ASSETS_CDN||"")+thumbnailURL)', '_this.video.src=((window.PX_STAGE_BASE||"")+thumbnailURL)', '原图使用页面基路径');
+  app = replace(app, '(location.hostname+port+pathname+"/"+path).replace("//","/")', '(location.hostname+port+pathname+"/"+path).replace(/\\/{2,}/g,"/")', '合并重复斜杠');
+}
+
+// iPadOS 13+ 的 Safari 自称 Macintosh。原先只把接近 4:3 的屏幕当成 iPad，iPad mini 会被当成桌面：
+// 触摸被 preventDefault，滚动拖拽关闭，悬停界面打不开。多点触控的 Mac 标识即平板。
+app = replace(app, 'function detectIpad(){let aspect=Math.max(screen.width,screen.height)/Math.min(screen.width,screen.height);return _this.detect("mac")&&_this.touchCapable&&Math.abs(aspect-4/3)<Math.abs(aspect-1.6)}', 'function detectIpad(){return _this.detect("mac")&&navigator.maxTouchPoints>1}', 'iPad 不再按长宽比误判为桌面');
+app = replace(app, '_scroll=new Scroll({limit:!1,drag:Device.mobile})', '_scroll=new Scroll({limit:!1,drag:!!(Device.mobile||navigator.maxTouchPoints>1)})', '多点触控可以拖动舞台');
+app = replace(app, 'function getDPR(){return window.AURA?Device.pixelRatio:', 'function getDPR(){if(Device.mobile&&Device.mobile.tablet)return Math.min(2,Device.pixelRatio||1);return window.AURA?Device.pixelRatio:', '平板画布使用设备像素');
+app = replace(app, '_this.getDPR=_=>GPU.OVERSIZED', '_this.getDPR=_=>Device.mobile&&Device.mobile.tablet?Math.min(2,Device.pixelRatio||1):GPU.OVERSIZED', '平板离屏缓冲使用设备像素');
+app = replace(app, '}else Stage.width=window.innerWidth||document.body.clientWidth||document.documentElement.offsetWidth,Stage.height=Stage.isNormalMobileScroll&&Stage.div.offsetHeight||window.innerHeight||document.body.clientHeight||document.documentElement.offsetHeight}', '}else{let vv=window.visualViewport&&"ios"===Device.system.os?window.visualViewport:null;Stage.width=vv?vv.width:window.innerWidth||document.body.clientWidth||document.documentElement.offsetWidth,Stage.height=vv?vv.height:Stage.isNormalMobileScroll&&Stage.div.offsetHeight||window.innerHeight||document.body.clientHeight||document.documentElement.offsetHeight}}', 'iPad 使用可视视口高度');
+app = replace(app, 'html.scrollTop=-1),Events.emitter._fireEvent(Events.RESIZE)}),delay)})),window.onorientationchange=window.onresize', 'html.scrollTop=-1),Events.emitter._fireEvent(Events.RESIZE)}),delay)})),window.visualViewport&&window.visualViewport.addEventListener("resize",(()=>{clearTimeout(timer),timer=setTimeout(updateStage,delay)})),window.onorientationchange=window.onresize', '工具栏变化时重测舞台');
+app = replace(app, '{width:60,height:30,bg:"#ff0000",_type:"glObject",refName:"hit",children:[]},{font:"NBArchitektStd-Regular",fontSize:12', '{width:96,height:48,bg:"#ff0000",_type:"glObject",refName:"hit",children:[]},{font:"NBArchitektStd-Regular",fontSize:12', '导航热区适合手指');
+app = replace(app, '_this.hit.alpha=0,_this.hit.y=-10,_this.hit.x=-10', '_this.hit.alpha=0,_this.hit.y=-18,_this.hit.x=-18', '导航热区盖住文字');
+// 基准测试把偏慢的 iPad 标成 legacy 后会进屏蔽名单。有真实 WebGL2、且不是软件渲染的 iOS 不跳转 unsupported。
+app = replace(app, 'match:function(){return!Device.graphics.gpu||Device.graphics.gpu.detect([', 'match:function(){const gl=Device.graphics.webgl,label=((gl&&gl.renderer)||"")+" "+((gl&&gl.gpu)||""),software=/swiftshader|llvmpipe|softpipe|basic render|generic renderer/i.test(label);let blocked=!Device.graphics.gpu||Device.graphics.gpu.detect([', '记录 GPU 屏蔽结果');
+app = replace(app, '"sgx543","legacy","sgx 543"])}}})', '"sgx543","legacy","sgx 543"]);if(blocked&&gl&&gl.webgl2&&"ios"===Device.system.os&&!software)blocked=!1;return blocked}}})', '真实 WebGL2 的 iPad 不进 unsupported');
+const cardNeedles = [
+  ['WorkItemShader.glsl', 'videoUV = mix(videoUV, scaleUV(gl_FragCoord.xy / resolution, vec2(0.6)), 0.3);'],
+  ['WorkItemShader.glsl', 'videoUV - normal.xy * 0.05 * (1.0-uVideoBlend)'],
+  ['WorkItemShader.glsl', '0.005 * edges'],
+  ['WorkItemShader.glsl', 'pow(min(vec3(0.5), video), vec3(1.0)) * 0.45'],
+  ['WorkItemShader.glsl', 'sin(time * 2.0 + vUv.x * 5.0) * 0.15'],
+  ['WorkItemShader.glsl', 'radialBlur(tRefraction, ruv, 5.0, 5.0)'],
+  ['WorkItemShader.glsl', 'ruv -= 0.05 * vNormal.xy'],
+  ['WorkItemShader.glsl', 'uHover * 0.03 + 0.02 + sin(time * 2.0 + vUv.x * 5.0) * 0.005'],
+  ['WorkItemShader.glsl', 'videoUV.x += edges * 0.5;'],
+  ['WorkItemShader.glsl', 'color.rgb += refraction * mix(1.1, 0.3, smoothstep(0.65, 0.0, length(vUv-0.5))) * mix(1.0, 0.7, uHover);'],
+  ['WorkItemUIShader.glsl', 'uv.x += fract(uv.x * 15.0) * edges;'],
+  ['WorkItemUIShader.glsl', 'getRGB(tMap, uv, radians(180.0), 0.001 - edges * 0.15)'],
+  ['WorkItemUIShader.glsl', 'uv.x -= (0.5 - vViewDir.x) * 0.1;'],
+  ['WorkItemUIShader.glsl', 'uv.y -= uv.y * vViewDir.x * 0.15 * edges;']
+];
+const shaderSource = await fs.readFile(path.join(frozen, 'compiled.vs'), 'utf8');
+for (const [file, needle] of cardNeedles) {
+  const chunk = shaderSource.split(`}{@}${file}{@}`)[1]?.split('}{@}')[0] || '';
+  assert.ok(chunk.includes(needle), `展板着色器片段缺失：${needle}`);
+}
+app = replace(app, 'function parseCompiled(shaders){var split=shaders.split("{@}");split.shift();for(var i=0;i<split.length;i+=2){var name=split[i],text=split[i+1];text.includes("#!UNIFORMS")?parseSingleShader(text,name):_this[name]=text}}', 'function parseCompiled(shaders){var split=shaders.split("{@}");split.shift();for(var i=0;i<split.length;i+=2){var name=split[i],text=split[i+1];if(name==="WorkItemShader.glsl"||name==="WorkItemUIShader.glsl")text=function mild(name,text){const swap=(a,b)=>{text.includes(a)&&(text=text.split(a).join(b))};if(name==="WorkItemShader.glsl"){swap("videoUV = mix(videoUV, scaleUV(gl_FragCoord.xy / resolution, vec2(0.6)), 0.3);","videoUV = mix(videoUV, scaleUV(gl_FragCoord.xy / resolution, vec2(0.6)), 0.0);");swap("videoUV - normal.xy * 0.05 * (1.0-uVideoBlend)","videoUV - normal.xy * 0.0 * (1.0-uVideoBlend)");swap("0.005 * edges","0.0");swap("pow(min(vec3(0.5), video), vec3(1.0)) * 0.45","video * 0.34");swap("videoUV.x += edges * 0.5;","videoUV.x += edges * 0.06;");swap("color.rgb += refraction * mix(1.1, 0.3, smoothstep(0.65, 0.0, length(vUv-0.5))) * mix(1.0, 0.7, uHover);","color.rgb += refraction * mix(0.45, 0.02, smoothstep(0.78, 0.46, length(vUv-0.5))) * mix(1.0, 0.7, uHover);");swap("sin(time * 2.0 + vUv.x * 5.0) * 0.15","sin(time * 2.0 + vUv.x * 5.0) * 0.04");swap("radialBlur(tRefraction, ruv, 5.0, 5.0)","radialBlur(tRefraction, ruv, 2.0, 1.25)");swap("ruv -= 0.05 * vNormal.xy","ruv -= 0.02 * vNormal.xy");swap("uHover * 0.03 + 0.02 + sin(time * 2.0 + vUv.x * 5.0) * 0.005","uHover * 0.015 + 0.006 + sin(time * 2.0 + vUv.x * 5.0) * 0.002")}else{swap("uv.x += fract(uv.x * 15.0) * edges;","uv.x += fract(uv.x * 15.0) * 0.0;");swap("getRGB(tMap, uv, radians(180.0), 0.001 - edges * 0.15)","getRGB(tMap, uv, 0.0, 0.0)");swap("uv.x -= (0.5 - vViewDir.x) * 0.1;","uv.x -= (0.5 - vViewDir.x) * 0.02;");swap("uv.y -= uv.y * vViewDir.x * 0.15 * edges;","uv.y -= uv.y * vViewDir.x * 0.03 * edges;")}return text}(name,text);text.includes("#!UNIFORMS")?parseSingleShader(text,name):_this[name]=text}}', '展板正面减轻涂抹，标志玻璃保持原着色器');
 await write('assets/js/app.1780406240914.js', app);
 
 let html = await fs.readFile(path.join(reference, 'index.html'), 'utf8');
@@ -163,19 +221,27 @@ html = html.replaceAll('Active Theory · Creative Digital Experiences', `${brand
   .replaceAll('https://activetheory.net', '/').replaceAll('content="Active Theory"', `content="${brand}"`)
   .replace(/\s*<script>\s*window\.dataLayer[\s\S]*?<\/script>/, '');
 const bootBridge = await buildBoot(root, write);
-html = html.replace('<head>', '<head>' + bootBridge);
+const assetPrefix = pagesBase
+  ? `<base href="${pagesBase}"><script>window.PX_STAGE_BASE=${JSON.stringify(pagesBase)};window.HYDRA_BASE_PATH=${JSON.stringify(pagesBase.slice(0, -1))};(function(){var base=${JSON.stringify(pagesBase.slice(0, -1))};try{var saved=sessionStorage.getItem("px-stage-path");if(saved){sessionStorage.removeItem("px-stage-path");if(saved.indexOf(base+"/")===0)history.replaceState(null,"",saved);}}catch(e){}var orig=window.fetch;window.fetch=function(input,init){if(typeof input==="string"&&input.charAt(0)==="/"&&input.charAt(1)!=="/"&&input.indexOf(base+"/")!==0)input=base+input;return orig.call(this,input,init);};})();</script>`
+  : '<base href="/">';
+html = html.replace('<base href="/">', '');
+html = html.replace('<head>', '<head>' + assetPrefix + bootBridge + '<meta name="px-stage" content="tablet-touch-3">');
 await write('index.html', html);
+if (pagesBase) {
+  await write('404.html', html);
+  await write('.nojekyll', '');
+}
 
 const uil = JSON.parse(await fs.readFile(path.join(frozen, 'uil.1780406240914.json'), 'utf8'));
 const changedUIL = [];
 function set(key, value) { assert.ok(key in uil, key); changedUIL.push({ key, before: uil[key], after: value }); uil[key] = value; }
-set('INPUT_Element_3_About_text3d_text', 'Rhine\nLab');
-set('INPUT_Element_4_About_text3d_text', 'The shape of a dream.\n\nLife / Memory / The Sky\n\nFourteen fragments from Rhine Lab. A personal Arknights art study.');
-set('INPUT_Element_5_WorkDetailContent_text3d_text', 'ORIGIN');
-set('INPUT_Element_8_WorkDetailContent_text3d_text', '01 / 14\nRHINE LAB\nARCHIVE');
+set('INPUT_Element_3_About_text3d_text', 'Project\nX');
+set('INPUT_Element_4_About_text3d_text', 'From the desk to the record.\n\nPaper / Scan / Scores\n\nFourteen studies of Project-X, in the paper-edge skin.');
+set('INPUT_Element_5_WorkDetailContent_text3d_text', 'PAPER');
+set('INPUT_Element_8_WorkDetailContent_text3d_text', '01 / 14\nPROJECT X\nSTUDIES');
 set('MESH_Element_22_CleanRoomscale', [.66, .33, 1]);
-set('INPUT_Element_15_CleanRoom_text3d_text', '// THE\nSKY ->');
-set('INPUT_Element_20_CleanRoom_text3d_text', 'A question beyond the horizon. A responsibility to those who remain.');
+set('INPUT_Element_15_CleanRoom_text3d_text', '// THE\nDESK ->');
+set('INPUT_Element_20_CleanRoom_text3d_text', 'A paper edge for work that stays inside the school.');
 for (const [key, filename] of [
   ['INPUT_Config_2_About_geometry', 'monogram-home.json'],
   ['INPUT_Config_8_ParticleTest_geometry', 'monogram-home.json'],
@@ -210,7 +276,7 @@ for (const size of [16, 32, 180]) {
   const image = await sharp(Buffer.from(svg)).resize(size, size, { fit: 'contain', background: '#000' }).png().toBuffer();
   await write(`assets/meta/${size === 180 ? 'apple-touch-icon' : `favicon-${size}x${size}`}.png`, image);
 }
-await write('assets/meta/manifest.json', JSON.stringify({ name: brand, short_name: brand, start_url: '/', display: 'standalone', background_color: '#000', theme_color: '#000' }));
+await write('assets/meta/manifest.json', JSON.stringify({ name: brand, short_name: brand, start_url: pagesBase || '/', display: 'standalone', background_color: '#000', theme_color: '#000' }));
 await write('assets/meta/safari-pinned-tab.svg', svg);
 
 // 只替换模型顶点；各场景位置、旋转、比例、材质和响应函数不变。
@@ -246,6 +312,6 @@ assert.ok(sceneConfig && app.includes(sceneConfig), '场景序列或滚动参数
 const shaderBytes = await fs.readFile(path.join(publicDir, 'assets/shaders/compiled.vs'));
 const shaderOriginal = await fs.readFile(path.join(frozen, 'compiled.vs')).catch(() => shaderBytes);
 assert.equal(sha(shaderBytes), sha(shaderOriginal));
-const manifest = { date: '2026-10-14', originalVersion: '1780406240914', brand, slogan, github, projectCount: studies.length, patches: changes, contentFields: changedUIL, preservedModules: preserved, sceneConfig, shaders: { sha256: sha(shaderBytes), identical: true }, runtimeSHA256: sha(app), originalRuntimeSHA256: sha(sourceApp), videoPolicy: '全部使用 14 张原始 1600×900 CG，保留原媒体切换、实时粒子与光学效果', sharedAssets: 'public/assets' };
+const manifest = { date: '2026-10-18', originalVersion: '1780406240914', brand, slogan, github, projectCount: studies.length, patches: changes, contentFields: changedUIL, preservedModules: preserved, sceneConfig, shaders: { sha256: sha(shaderBytes), identical: true }, runtimeSHA256: sha(app), originalRuntimeSHA256: sha(sourceApp), videoPolicy: '十四张 1600×900 纸锋展板，保留原媒体切换、实时粒子与光学效果', sharedAssets: 'public/assets' };
 await fs.writeFile(path.join(analysis, 'adaptation-manifest.json'), JSON.stringify(manifest, null, 2));
-console.log(`原版动效模块 ${preserved.length} 项逐字节一致；14 段莱茵档案、莱茵三维标志与登录序列已接入。`);
+console.log(`原版动效模块 ${preserved.length} 项逐字节一致；14 段 Project-X 纸锋研究、原三维标志与登录序列已接入。`);
