@@ -4,7 +4,7 @@
 
 **[宣传站](https://xiaoxu66609.github.io/Project-X-promo-site/) · [主仓库](https://github.com/Dalian-No-5-Middle-School-I-T-C/Project-X) · [进入系统](https://dl5zx.cn/)**
 
-舞台来自 [open-active-theory](https://github.com/Snychng/open-active-theory) 的发布版，登录开场改编自 [RhineLabUI](https://github.com/LBEILC/RhineLabUI)。这一分支替换展陈内容，并让 iPad 触摸可以滚动、点开研究、看原图再离开。相机路径、场景顺序、粒子、时长和登录字形动画保持原值。磁盘上的 shader 文件不改；展板正面在加载时减轻涂抹，标志玻璃仍用原光学材质。源码公开不代表第三方运行时、字体、音乐或宣传截图获得统一开源授权，详见[来源与许可](#来源与许可)。
+舞台来自 [open-active-theory](https://github.com/Snychng/open-active-theory) 的发布版，登录开场改编自 [RhineLabUI](https://github.com/LBEILC/RhineLabUI)。这一分支替换展陈内容，并让 iPad 触摸可以滚动、点开研究、看原图再离开。相机路径、场景顺序、粒子、时长和登录字形动画保持原值。磁盘上的 shader 文件不改；展板正面在加载时收起侧向错位和中心折射，静止时截图可读，标志玻璃仍用原光学材质。源码公开不代表第三方运行时、字体、音乐或宣传截图获得统一开源授权，详见[来源与许可](#来源与许可)。
 
 ## 运行画面
 
@@ -41,7 +41,7 @@ npm run dev
 - 登录：沿用 RhineLabUI 的标志笔画、身份提示、授权扫描、欢迎页逐帧动画；整体深色，止于欢迎页。主站真实资源就绪且欢迎帧停稳后，约 1.5 秒淡入原三维场景。就绪后可以跳到欢迎页；减少动态效果偏好会直接显示欢迎页。
 - 标志：按 RhineLabUI 共享标志的贝塞尔轮廓生成三维挤出模型，替换首页、About、TreeScene、CleanRoom 所需几何和相关贴图。保留原始材质；CleanRoom 中缩小横向标志贴图，避免遮挡两侧文字。展品卡片贴图预留透明边距，避开原 LogoShader 左右各 10% 的裁切区，完整显示标志。
 - 十四张展板：1600×900 PNG，构建时按字节复制。有实机截图的用宣传站原图加纸锋硬边；没有截图的只排文字，不画假界面。**无展示视频**。
-- 原始特效：相机路径、场景顺序、滚动参数、详情粒子与鼠标流体扰动继续使用原发布版。全屏模式显示完整展板；正常详情仍走原来的实时图形渲染。iPadOS 自报 Macintosh，只要有多点触控就按平板处理，避免触摸被桌面路径吃掉。平板画布和离屏缓冲使用设备像素比，上限 2。
+- 原始特效：相机路径、场景顺序、滚动参数、详情粒子与鼠标流体扰动继续使用原发布版。全屏模式显示完整展板；正常详情仍走原来的实时图形渲染。iPadOS 自报 Macintosh，只要有多点触控就按平板处理，避免触摸被桌面路径吃掉。平板画布和离屏缓冲使用设备像素比，上限 2。竖屏打开研究时，详情图层收回可视宽度。
 - 文案：考试锁写成 tighter lock，开源署名写成 IT center，About 使用 paper-edge skin。登录页的 RHINE LAB 字形不改。
 - 展陈、关于和联系入口是全英文。登录欢迎页里的 RHINE LAB 字形是原开场动画，不改词，否则笔画时间对不上。
 - 顺序固定为 Paper → The Desk → Sheets → The Exam → The Scan → Marking → The Record → Two Skins → Calendar → The Week → Reading → On Site → The Roles → Open。

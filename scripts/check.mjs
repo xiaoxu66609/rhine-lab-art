@@ -18,7 +18,12 @@ assert.match(app, /function detectIpad\(\)\{return _this\.detect\("mac"\)&&navig
 assert.match(app, /drag:!!\(Device\.mobile\|\|navigator\.maxTouchPoints>1\)/);
 assert.match(app, /Device\.mobile&&Device\.mobile\.tablet\?Math\.min\(2,Device\.pixelRatio\|\|1\)/);
 assert.match(app, /if\(blocked&&gl&&gl\.webgl2&&"ios"===Device\.system\.os&&!software\)blocked=!1;return blocked/);
-assert.match(app, /video \* 0\.7/);
+assert.match(app, /video \* 0\.34/);
+assert.match(app, /videoUV\.x \+= edges \* 0\.06;/);
+assert.match(app, /mix\(0\.45, 0\.02, smoothstep\(0\.78, 0\.46, length\(vUv-0\.5\)\)\)/);
+assert.match(app, /Stage\.height>Stage\.width/);
+assert.match(app, /link\.addEventListener\("touchend"/);
+assert.match(app, /display: inline-flex;\\n        align-items: center;\\n        min-height: 44px;/);
 const files = await fs.readdir(path.join(source, 'modules'));
 for (const module of report.preservedModules) {
   const original = (await fs.readFile(path.join(source, 'modules', files.find(file => file.endsWith(`-${module.name}.js`))), 'utf8')).trim();
