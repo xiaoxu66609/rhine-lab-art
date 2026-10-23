@@ -1,6 +1,6 @@
 # PROJECT X — From the desk to the record
 
-用莱茵实验室的交互舞台展出试卷星 Project-X：十四段宣传研究、原来的实时三维场景、鼠标粒子，以及深色登录开场。
+用原来的 WebGL 交互舞台展出试卷星 Project-X：十四段宣传研究、原来的实时三维场景、鼠标粒子，以及深色登录开场。开场词标是 PROJECT X。
 
 **[宣传站](https://xiaoxu66609.github.io/Project-X-promo-site/) · [主仓库](https://github.com/Dalian-No-5-Middle-School-I-T-C/Project-X) · [进入系统](https://dl5zx.cn/)**
 
@@ -42,8 +42,8 @@ npm run dev
 - 标志：按 RhineLabUI 共享标志的贝塞尔轮廓生成三维挤出模型，替换首页、About、TreeScene、CleanRoom 所需几何和相关贴图。保留原始材质；CleanRoom 中缩小横向标志贴图，避免遮挡两侧文字。展品卡片贴图预留透明边距，避开原 LogoShader 左右各 10% 的裁切区，完整显示标志。
 - 十四张展板：1600×900 PNG，构建时按字节复制。有实机截图的用宣传站原图加纸锋硬边；没有截图的只排文字，不画假界面。**无展示视频**。
 - 原始特效：相机路径、场景顺序、滚动参数、详情粒子与鼠标流体扰动继续使用原发布版。全屏模式显示完整展板；正常详情仍走原来的实时图形渲染。iPadOS 自报 Macintosh，只要有多点触控就按平板处理，避免触摸被桌面路径吃掉。平板画布和离屏缓冲使用设备像素比，上限 2。竖屏打开研究时，详情图层收回可视宽度。
-- 文案：考试锁写成 tighter lock，开源署名写成 IT center，About 使用 paper-edge skin。登录页的 RHINE LAB 字形不改。
-- 展陈、关于和联系入口是全英文。登录欢迎页里的 RHINE LAB 字形是原开场动画，不改词，否则笔画时间对不上。
+- 文案：考试锁写成 tighter lock，开源署名写成 IT center，About 使用 paper-edge skin。登录页词标是 PROJECT X：九格品牌、九格标志字、十四格机构名。X 按原坐标系补笔。`POWERED BY PROJECT X` 的裁切跟着新长度。揭示帧窗口不改。
+- 展陈、关于和联系入口是全英文。页脚有一段 Project-X 介绍，链到 dl5zx.cn 和主仓库。
 - 顺序固定为 Paper → The Desk → Sheets → The Exam → The Scan → Marking → The Record → Two Skins → Calendar → The Week → Reading → On Site → The Roles → Open。
 
 ## 编辑入口
@@ -68,4 +68,4 @@ npm run dev
 
 ## 来源与许可
 
-舞台和登录代码的许可没有因为换成宣传内容而改变。RhineLabUI 代码采用 MIT，复制部分保留原许可。开场使用该项目自带固定字形图形和 MiSans。Active Theory 发布包及原站字体、音乐未被授予统一开源许可。三维标志仍是莱茵生命轮廓。细目见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+舞台和登录代码的许可没有因为换成宣传内容而改变。RhineLabUI 代码采用 MIT，复制部分保留原许可。开场使用该项目自带固定字形图形和 MiSans，可见词标写成 PROJECT X。Active Theory 发布包及原站字体、音乐未被授予统一开源许可。三维标志仍是上游轮廓。细目见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

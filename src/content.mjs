@@ -3,10 +3,11 @@ export const promo = 'https://xiaoxu66609.github.io/Project-X-promo-site/';
 export const live = 'https://dl5zx.cn/';
 export const brand = 'PROJECT X';
 export const slogan = 'From the desk to the record.';
+export const stageIntro = 'Project-X is the in-school marking and learning-record system built by the IT center of Dalian No.5 Middle School. The public version on the main repository is v2.7.1. This stage keeps the original WebGL studies: fourteen plates about the paper-edge skin, the desk, answer sheets, scanning, marking, scores, roles, and the GPL-3.0 source.';
 
 // Exhibition copy for the school system. The stage, shaders and timing stay on the original path.
 const chapters = [
-  ['Paper', '2e44ff', 'Paper, Skin', 'Paper Edge is the default face of the system: warm paper, ink, and a hard edge. Flat 2.0 stays one switch away. / Project-X promo site.', 'SKIN', 'The default face of the system.', `${promo}#screenshot`],
+  ['Paper', '2e44ff', 'Paper, Skin', 'Project-X is the in-school marking and learning-record system of the IT center at Dalian No.5 Middle School. The public version is v2.7.1. This stage is fourteen WebGL studies of that system. Paper Edge is the default face: warm paper, ink, and a hard edge. Flat 2.0 stays one switch away. The system is at dl5zx.cn and the source is the main repository.', 'SKIN', 'The default face of the system.', `${promo}#screenshot`],
   ['The Desk', '1f30c8', 'Paper, Desk', 'The home desk opens on the work itself. Answer sheets, exams, scores and accounts share one paper surface, and the latest marked paper is one step away. / Live system.', 'HOME', 'Modules, shortcuts, the latest scores.', live],
   ['Sheets', '1a1917', 'Paper, Design', 'Answer sheets are drawn in the browser: choice blocks, blanks, pictures, notes and subject templates, then exported as a PDF for the printer. / Promo site, modules.', 'DESIGN', 'A sheet, set to the millimetre.', `${promo}#modules`],
   ['The Exam', '4a4842', 'Scores, Exam', 'One exam can be a morning test, open to the teachers who need it, or a formal paper with a tighter lock. The office can change that mode later. / Promo site, modules.', 'EXAM', 'A morning test, or a formal paper.', `${promo}#modules`],

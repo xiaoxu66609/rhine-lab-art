@@ -8,8 +8,9 @@ overlay.innerHTML = `<div id="rhine-stage" data-mode="boot">
 <header class="brand">${brandHeading}</header><section class="boot">
 <div class="access-text"></div><div class="boot-logo">${logo}</div><div class="auth-status"><span>▪</span><span id="auth-message"></span><i></i></div>
 <div class="scan"><svg viewBox="0 0 1920 1080"><g fill="none" stroke="#080a08" stroke-width="2" stroke-linecap="round"><path/><path stroke="#fff"/><path/><path/><path/><path/><circle class="orbit-dot" r="8" fill="#ed821b" stroke="none"/><circle class="orbit-dot" r="8" fill="#ed821b" stroke="none"/><circle class="scan-core" cx="960" cy="540" r="5" fill="#080a08" stroke="none"/></g></svg><span></span></div>
-<div class="welcome"><div class="welcome-panel"></div><div class="welcome-heading"></div><div class="welcome-company"><strong>RHINE LAB.LLC.</strong><strong class="welcome-highlight" aria-hidden="true">RHINE LAB.LLC.</strong></div><div class="welcome-database"></div><div class="welcome-logo">${logo}</div></div></section>
-<div class="powered">POWERED BY <b>RHINE LAB</b><i></i></div></div>
+<div class="welcome"><div class="welcome-panel"></div><div class="welcome-heading"></div><div class="welcome-company"><strong>PROJECT X.ITC.</strong><strong class="welcome-highlight" aria-hidden="true">PROJECT X.ITC.</strong></div><div class="welcome-database"></div><div class="welcome-logo">${logo}</div></div></section>
+<div class="powered">POWERED BY <b>PROJECT X</b><i></i></div></div>
+<p class="px-boot-intro">Project-X is the in-school marking and learning-record system built by the IT center of Dalian No.5 Middle School. The public version on the main repository is v2.7.1. This stage keeps the original WebGL studies: fourteen plates about the paper-edge skin, the desk, answer sheets, scanning, marking, scores, roles, and the GPL-3.0 source. <a href="https://dl5zx.cn/">dl5zx.cn</a> · <a href="https://github.com/Dalian-No-5-Middle-School-I-T-C/Project-X">GitHub</a></p>
 <div class="load-status"><span role="status">INITIALIZING STUDIES</span><button disabled>PREPARING SCENE</button></div>`;
 document.body.append(overlay);
 const stage = overlay.querySelector('#rhine-stage');

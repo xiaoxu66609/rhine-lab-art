@@ -104,7 +104,7 @@ export class BootSequence {
         this.poweredHTML = this.el(".powered").innerHTML;
         new BootLettering(this.brandLines[0], [
             "brand"
-        ]).setText("RHINE LAB");
+        ]).setText("PROJECT X");
         this.accessLettering = new BootLettering(this.el(".access-text"), [
             "access"
         ]);
@@ -135,7 +135,7 @@ export class BootSequence {
         ]).setText(text);
         this.companyInk.forEach((el)=>new BootLettering(el.querySelector("span"), [
                 "company"
-            ]).setText("RHINE LAB.LLC."));
+            ]).setText("PROJECT X.ITC."));
     }
     el(selector) {
         return this.nodes.get(selector);
@@ -167,7 +167,7 @@ export class BootSequence {
             node.style.transform = `translateX(${s.brand[i].x}px)`;
         });
         this.opacity(".powered", s.poweredLetters > 0);
-        this.el(".powered").style.clipPath = `inset(0 ${100 * (1 - s.poweredLetters / 19)}% 0 0)`;
+        this.el(".powered").style.clipPath = `inset(0 ${100 * (1 - s.poweredLetters / "POWERED BY PROJECT X".length)}% 0 0)`;
         this.opacity(".scan", s.scanVisible);
         if (s.scanVisible) this.renderScan(s);
         this.opacity(".welcome", s.welcomeVisible ? s.welcomeOpacity : 0);
