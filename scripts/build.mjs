@@ -8,7 +8,7 @@ import { ExtrudeGeometry, Vector3 } from 'three';
 import { rhineShapes, rhineSVG } from '../src/rhine-shape.mjs';
 import { buildBoot } from './build-boot.mjs';
 import sharp from 'sharp';
-import { brand, slogan, github, promo, live, studies } from '../src/content.mjs';
+import { brand, slogan, stageIntro, github, promo, live, studies } from '../src/content.mjs';
 
 function pagesBasePath() {
   const value = (process.env.PAGES_BASE || '').trim();
@@ -151,7 +151,7 @@ app = replace(app, '${data.title} · Active Theory', '${data.title} · ' + brand
 const info = 'Active Theory is a creative digital production studio founded in 2012.';
 const infoStart = app.indexOf(info), infoEnd = app.indexOf('"', infoStart);
 assert.ok(infoStart > 0 && infoEnd > infoStart);
-app = replace(app, app.slice(infoStart, infoEnd), `${brand}. ${slogan} Fourteen studies of the school marking system, set in its paper-edge skin. Source: ${github}.`, 'WebMCP 品牌介绍');
+app = replace(app, app.slice(infoStart, infoEnd), `${brand}. ${stageIntro} Live: ${live}. Source: ${github}.`, 'WebMCP 品牌介绍');
 app = app.replaceAll('Get more information about Active Theory, the agency that created this website.', `Get more information about ${brand}.`)
   .replaceAll('Open the contact modal for Active Theory.', `Open the contact modal for ${brand}.`)
   .replaceAll('Please use the provided email to reach out.', 'Open the project repository.');
@@ -225,7 +225,9 @@ const assetPrefix = pagesBase
   ? `<base href="${pagesBase}"><script>window.PX_STAGE_BASE=${JSON.stringify(pagesBase)};window.HYDRA_BASE_PATH=${JSON.stringify(pagesBase.slice(0, -1))};(function(){var base=${JSON.stringify(pagesBase.slice(0, -1))};try{var saved=sessionStorage.getItem("px-stage-path");if(saved){sessionStorage.removeItem("px-stage-path");if(saved.indexOf(base+"/")===0)history.replaceState(null,"",saved);}}catch(e){}var orig=window.fetch;window.fetch=function(input,init){if(typeof input==="string"&&input.charAt(0)==="/"&&input.charAt(1)!=="/"&&input.indexOf(base+"/")!==0)input=base+input;return orig.call(this,input,init);};})();</script>`
   : '<base href="/">';
 html = html.replace('<base href="/">', '');
+html = html.replaceAll(`content="${slogan}"`, `content="${stageIntro}"`);
 html = html.replace('<head>', '<head>' + assetPrefix + bootBridge + '<meta name="px-stage" content="tablet-touch-3">');
+html = html.replace('</body>', `<p id="px-stage-intro">${stageIntro} <a href="${live}">dl5zx.cn</a> · <a href="${github}">GitHub</a></p><style>#px-stage-intro{position:fixed;z-index:30;left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));max-width:680px;margin:0;padding:8px 12px;color:#e7ece9;background:#121414d0;font:13px/1.5 ui-sans-serif,system-ui,sans-serif}#px-stage-intro a{color:#b7c6ff}</style></body>`);
 await write('index.html', html);
 if (pagesBase) {
   await write('404.html', html);
@@ -236,7 +238,7 @@ const uil = JSON.parse(await fs.readFile(path.join(frozen, 'uil.1780406240914.js
 const changedUIL = [];
 function set(key, value) { assert.ok(key in uil, key); changedUIL.push({ key, before: uil[key], after: value }); uil[key] = value; }
 set('INPUT_Element_3_About_text3d_text', 'Project\nX');
-set('INPUT_Element_4_About_text3d_text', 'From the desk to the record.\n\nPaper / Scan / Scores\n\nFourteen studies of Project-X, in the paper-edge skin.');
+set('INPUT_Element_4_About_text3d_text', 'From the desk to the record.\n\nDalian No.5 Middle School IT center.\nIn-school marking and learning records.\nPublic version v2.7.1.\n\nFourteen WebGL studies.');
 set('INPUT_Element_5_WorkDetailContent_text3d_text', 'PAPER');
 set('INPUT_Element_8_WorkDetailContent_text3d_text', '01 / 14\nPROJECT X\nSTUDIES');
 set('MESH_Element_22_CleanRoomscale', [.66, .33, 1]);
